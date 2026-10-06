@@ -41,4 +41,5 @@ Durées par profil dans l'objet `PROF`.
 - L'outil `Edit` échoue parfois sur du texte accentué multi-lignes ou des `\uXXXX` : passer par `sed` ou un fichier temporaire.
 - Un onglet de navigateur en arrière-plan gèle les transitions CSS (faux négatifs de test) : le mettre au premier plan.
 - Dépôt GitHub (privé) : `https://github.com/TISBio/Peuple-vert`, branche `master`. Sur le réseau du labo, `git push`/`clone` peut échouer avec « unable to get local issuer certificate » : utiliser `git -c http.sslBackend=schannel push` (certificats Windows). Ne pas désactiver la vérification SSL.
+- Commits : toujours avec l'identité `Corentin Spriet <114572992+TISBio@users.noreply.github.com>` (jamais une adresse e-mail personnelle : le dépôt est public). Passer l'identité par commande (`git -c user.name=... -c user.email=...`) plutôt que de modifier la config git.
 - L'historique détaillé des décisions est dans les notes locales du PC principal (non versionnées) ; ce fichier en est le résumé.
