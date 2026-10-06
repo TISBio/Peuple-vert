@@ -40,4 +40,5 @@ Durées par profil dans l'objet `PROF`.
 - Ne jamais arrêter un processus par titre de fenêtre (cela a déjà fermé le Chrome de l'utilisateur) : seulement par PID exact.
 - L'outil `Edit` échoue parfois sur du texte accentué multi-lignes ou des `\uXXXX` : passer par `sed` ou un fichier temporaire.
 - Un onglet de navigateur en arrière-plan gèle les transitions CSS (faux négatifs de test) : le mettre au premier plan.
+- Dépôt GitHub (privé) : `https://github.com/TISBio/Peuple-vert`, branche `master`. Sur le réseau du labo, `git push`/`clone` peut échouer avec « unable to get local issuer certificate » : utiliser `git -c http.sslBackend=schannel push` (certificats Windows). Ne pas désactiver la vérification SSL.
 - Historique détaillé des décisions (PC principal uniquement) : `C:\Users\Corentin\.claude\projects\D--AAA-fete-de-la-sciences-FDS2026-CNRS\memory\project_peuple_vert.md`.
