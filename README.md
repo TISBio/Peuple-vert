@@ -95,3 +95,15 @@ Réveil de la colonie (échauffement), puis :
 - Carvalho et al. (2013), *Interception of nutrient rich submarine groundwater discharge seepage on European temperate beaches by the acoel flatworm, Symsagittifera roscoffensis*, Mar. Pollut. Bull. — [10.1016/j.marpolbul.2013.07.045](https://doi.org/10.1016/j.marpolbul.2013.07.045)
 - Dupont et al. (2012), *Stable photosymbiotic relationship under CO₂-induced acidification in the acoel worm Symsagittifera roscoffensis*, PLoS ONE — [10.1371/journal.pone.0029568](https://doi.org/10.1371/journal.pone.0029568)
 - Pennati et al. (2024), *Bisphenol A affects the development and the onset of photosymbiosis in the acoel Symsagittifera roscoffensis*, Mar. Environ. Res. — [10.1016/j.marenvres.2024.106617](https://doi.org/10.1016/j.marenvres.2024.106617)
+
+## Licence
+
+© Corentin Spriet. Ce projet est publié sous licence
+**[Creative Commons Attribution - Pas d'Utilisation Commerciale - Partage dans les Mêmes Conditions 4.0 International (CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr)**
+(texte complet dans le fichier `LICENSE`).
+
+En résumé : vous pouvez partager et adapter le jeu, à condition de citer l'auteur, de ne pas en faire un usage
+commercial et de redistribuer vos versions sous la même licence.
+
+**Exception :** les logos du PLBS et de l'UGSF (`assets/logo-plbs.jpg`, `assets/logo-ugsf.jpg`) restent la
+propriété de leurs titulaires et ne sont pas couverts par cette licence.
