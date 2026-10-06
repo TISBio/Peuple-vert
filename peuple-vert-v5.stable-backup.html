@@ -1,0 +1,1772 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LE PEUPLE VERT — Symsagittifera roscoffensis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tourney:wght@700;800;900&family=Rajdhani:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#07080B; --bg2:#0D1016;
+    --green:#B6FF3C; --green-soft:#D8FF8E; --green-deep:#5C9A1E;
+    --orange:#FF2E6A; --orange-soft:#FF7FA8; --cyan:#29F1FF;
+    --yellow:#2255DD; --ink:#E7ECEF;
+    --panel:rgba(13,16,22,.76); --line:rgba(182,255,60,.35);
+    --magenta:#FF2E9A;
+    --font-display:"Tourney","Arial Narrow",sans-serif;
+    --font-body:"Rajdhani",system-ui,sans-serif;
+    --font-mono:"JetBrains Mono","SF Mono","Consolas",monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    background:
+      radial-gradient(1200px 700px at 50% -10%, rgba(41,241,255,.09), transparent 60%),
+      radial-gradient(900px 600px at 50% 120%, rgba(255,46,154,.08), transparent 60%),
+      var(--bg);
+    color:var(--ink);
+    font-family:var(--font-body);font-weight:500;
+    overflow:hidden;-webkit-font-smoothing:antialiased;
+  }
+  .mono{font-family:var(--font-mono)}
+  .title,.big,.fbig,.atitle,.zb,.cb,.btn,.ptitle,.kicker{font-family:var(--font-display);font-weight:800}
+  .kicker{font-weight:700}
+
+  /* cadre viseur (HUD tactique) */
+  .viewframe{position:relative}
+  .viewframe .vfc{position:absolute;width:16px;height:16px;border:3px solid var(--green);pointer-events:none}
+  .viewframe .vf-tl{top:-7px;left:-7px;border-right:none;border-bottom:none}
+  .viewframe .vf-tr{top:-7px;right:-7px;border-left:none;border-bottom:none}
+  .viewframe .vf-bl{bottom:-7px;left:-7px;border-right:none;border-top:none}
+  .viewframe .vf-br{bottom:-7px;right:-7px;border-left:none;border-top:none}
+
+  /* rubalise */
+  .hazardbar{height:9px;background:repeating-linear-gradient(-45deg,var(--yellow) 0 13px,var(--bg) 13px 26px);opacity:.85}
+
+  /* titre glitch RVB */
+  .glitchtitle{position:relative;display:inline-block}
+  .glitchtitle::before,.glitchtitle::after{content:attr(data-text);position:absolute;inset:0;background:var(--bg)}
+  .glitchtitle::before{color:var(--cyan);clip-path:polygon(0 0,100% 0,100% 34%,0 34%);animation:glitchA 5.5s steps(1) infinite}
+  .glitchtitle::after{color:var(--magenta);clip-path:polygon(0 66%,100% 66%,100% 100%,0 100%);animation:glitchB 5.5s steps(1) infinite}
+  @keyframes glitchA{0%,88%{transform:translate(0,0)}90%{transform:translate(-3px,0)}92%{transform:translate(2px,0)}94%,100%{transform:translate(0,0)}}
+  @keyframes glitchB{0%,89%{transform:translate(0,0)}91%{transform:translate(3px,0)}93%{transform:translate(-2px,0)}95%,100%{transform:translate(0,0)}}
+  .holoword{background:linear-gradient(100deg,var(--magenta),var(--cyan),var(--green));-webkit-background-clip:text;background-clip:text;color:transparent}
+  @media (prefers-reduced-motion:reduce){.glitchtitle::before,.glitchtitle::after{animation:none;display:none}}
+  #app{position:fixed;inset:0;display:flex;flex-direction:column}
+  #app::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:60;
+    background:repeating-linear-gradient(0deg,rgba(0,0,0,.18) 0 1px,transparent 1px 3px);
+    mix-blend-mode:multiply;opacity:.35}
+
+  /* HUD */
+  #hud{display:flex;gap:14px;padding:14px 18px;align-items:stretch;z-index:30}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:4px;
+    box-shadow:0 0 0 1px rgba(0,0,0,.4),0 0 24px rgba(61,255,140,.08) inset;
+    clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px));
+    padding:10px 14px;position:relative}
+  .panel .tag{position:absolute;top:-9px;left:10px;font-size:10px;letter-spacing:.22em;
+    color:var(--green);background:var(--bg2);padding:0 6px;text-transform:uppercase}
+  #phaseName{flex:1;display:flex;flex-direction:column;justify-content:center}
+  #phaseName .big{font-size:clamp(22px,3.2vw,40px);font-weight:900;font-style:italic;letter-spacing:.02em;
+    text-transform:uppercase;line-height:1;text-shadow:0 0 18px rgba(61,255,140,.5)}
+  #phaseName .sub{font-size:12px;letter-spacing:.28em;color:var(--green-soft);margin-top:6px;text-transform:uppercase}
+  #phaseName.danger .big{color:var(--orange);text-shadow:0 0 18px rgba(255,122,24,.6)}
+  #phaseName.danger .sub{color:var(--orange-soft)}
+  #phaseBar{height:4px;margin-top:8px;background:rgba(0,0,0,.5);border-radius:2px;overflow:hidden}
+  #phaseBar i{display:block;height:100%;width:0;background:var(--green);box-shadow:0 0 8px var(--green);transition:width .15s linear}
+  #phaseName.danger #phaseBar i{background:var(--orange);box-shadow:0 0 8px var(--orange)}
+  .stat{min-width:118px;text-align:center;display:flex;flex-direction:column;justify-content:center}
+  .stat .num{font-size:clamp(18px,2.4vw,30px);font-weight:900;line-height:1}
+  .stat .lbl{font-size:10px;letter-spacing:.2em;color:var(--green-soft);text-transform:uppercase;margin-top:4px}
+  .bar{height:14px;background:rgba(0,0,0,.45);border:1px solid var(--line);border-radius:2px;overflow:hidden;position:relative;width:230px}
+  .bar > i{display:block;height:100%;width:0;background:linear-gradient(90deg,#0a5a8a,var(--cyan));box-shadow:0 0 14px var(--cyan)}
+  .hearts{display:flex;gap:6px;justify-content:center;font-size:22px;line-height:1}
+  .hearts span{filter:drop-shadow(0 0 6px rgba(61,255,140,.6))}
+  .hearts span.dead{opacity:.18;filter:none}
+  /* panneau compétition (terminale) */
+  #competePanel{display:none;flex-direction:row;gap:14px}
+  #competePanel .cc{text-align:center;min-width:70px}
+  #competePanel .cn{font-size:clamp(18px,2.2vw,26px);font-weight:900;line-height:1}
+  #competePanel .cl{font-size:10px;letter-spacing:.16em;text-transform:uppercase;margin-top:4px;color:var(--green-soft)}
+  #ccL .cn{color:var(--cyan)} #ccR .cn{color:var(--orange-soft)}
+
+  /* STAGE */
+  #stage{flex:1;position:relative;overflow:hidden}
+  #scene{position:absolute;inset:0;width:100%;height:100%;display:block}
+  #flash{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%) skewX(-6deg);z-index:30;text-align:center;pointer-events:none;opacity:0;transition:opacity .18s}
+  #flash .fbig{font-size:clamp(40px,8vw,110px);font-weight:900;font-style:italic;text-transform:uppercase;line-height:.92}
+  #flash .fsub{font-size:clamp(14px,2vw,22px);letter-spacing:.3em;text-transform:uppercase;margin-top:8px}
+  #flash.show{opacity:1}
+
+  #info.left{right:auto;left:18px}
+  #info.left:not(.show){transform:translateX(-120%)}
+  #info.top{bottom:auto;top:18px}
+  #info{position:absolute;right:18px;bottom:60px;max-width:360px;z-index:26;
+    background:linear-gradient(160deg,rgba(8,30,18,.95),rgba(6,16,12,.95));
+    border:2px solid var(--green);border-radius:4px;padding:16px 18px;
+    clip-path:polygon(0 0,calc(100% - 18px) 0,100% 18px,100% 100%,18px 100%,0 calc(100% - 18px));
+    transform:translateX(120%);transition:transform .45s cubic-bezier(.2,.9,.25,1);box-shadow:0 0 30px rgba(61,255,140,.25)}
+  #info.show{transform:translateX(0)}
+  #info #infoImg{display:none;width:100%;height:120px;object-fit:cover;margin-bottom:10px;border:1px solid var(--line)}
+  #info #infoImg.show{display:block}
+  #info .ititle{font-size:13px;letter-spacing:.24em;color:var(--green);text-transform:uppercase;margin-bottom:6px}
+  #info .itext{font-size:16px;line-height:1.35}
+  #info .itext b{color:var(--green-soft)}
+
+  #gauge{position:absolute;left:18px;top:0;bottom:0;width:64px;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:24;pointer-events:none}
+  #gtube{position:relative;width:34px;flex:0 0 62%;background:rgba(0,0,0,.5);border:2px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 0 20px rgba(0,0,0,.5) inset}
+  #gfill{position:absolute;left:0;right:0;bottom:0;height:0%;background:linear-gradient(0deg,var(--green-deep),var(--green));box-shadow:0 0 24px var(--green)}
+  #gthresh{position:absolute;left:-6px;right:-6px;height:2px;background:var(--orange);box-shadow:0 0 8px var(--orange)}
+  #gband{position:absolute;left:-4px;right:-4px;background:rgba(61,255,140,.16);border-top:1px solid var(--green);border-bottom:1px solid var(--green);display:none}
+  #gauge .glab{font-size:9px;letter-spacing:.18em;color:var(--green-soft);margin-top:8px;text-transform:uppercase;text-align:center}
+  #gauge .gpct{font-size:18px;font-weight:900;margin-bottom:6px}
+
+  /* camera box in-game */
+  #cam{position:absolute;right:18px;top:18px;width:560px;z-index:24;border:2px solid var(--line);border-radius:4px;overflow:hidden;display:none;background:#000}
+  #cam .wrap{position:relative;line-height:0}
+  #cam video,#cam canvas{width:100%;display:block}
+  #cam .wrap canvas{position:absolute;inset:0}
+  #cam .clab{font-size:9px;letter-spacing:.12em;color:var(--green);text-align:center;padding:3px;background:rgba(0,0,0,.6);text-transform:uppercase;line-height:1.2}
+  #cam .clab b{color:var(--yellow)}
+  #camSplit{display:none;position:absolute;inset:0;pointer-events:none}
+  .camDivLine{position:absolute;top:0;bottom:0;left:50%;width:5px;margin-left:-2.5px;background:var(--cyan);box-shadow:0 0 14px 2px var(--cyan)}
+  .camZoneLbl{position:absolute;top:8px;font-family:var(--font-display);text-align:center;background:rgba(0,0,0,.72);padding:6px 16px;border-radius:4px;text-shadow:0 0 10px rgba(0,0,0,.9)}
+  .camZoneLbl-l{left:8px} .camZoneLbl-r{right:8px}
+  .camZoneLbl .gName{font-size:26px;font-weight:800;font-style:italic;letter-spacing:.05em;text-transform:uppercase;color:var(--ink)}
+  .camZoneLbl .gMsg{font-size:17px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin-top:2px;color:var(--green-soft)}
+  .camZoneLbl .gMsg.warn{color:var(--yellow)}
+
+  /* voyant de signal caméra */
+  .voyant{display:inline-block;padding:1px 6px;border-radius:9px;font-size:9px;font-weight:800;letter-spacing:.06em;margin-left:5px;background:#444;color:#ccc}
+  .voyant.on{background:var(--green);color:#04140a}
+  .voyant.off{background:var(--orange);color:#2a0a00}
+
+  /* légende contextuelle : sens des couleurs dans la phase courante */
+  #pvLegend{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);z-index:27;display:none;gap:22px;
+    background:rgba(4,12,8,.72);border:1px solid var(--line);border-radius:4px;padding:7px 18px;font-size:14px;letter-spacing:.03em}
+  #pvLegend.show{display:flex}
+  #pvLegend span{display:flex;align-items:center;gap:8px}
+  #pvLegend i{width:15px;height:15px;border-radius:3px;box-shadow:0 0 8px rgba(0,0,0,.5)}
+  #pvLegend b{font-weight:800;color:var(--ink)}
+  #transformReveal{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.9);z-index:31;
+    display:none;opacity:0;pointer-events:none;background:rgba(4,12,8,.92);border:2px solid var(--green);
+    padding:20px 26px;text-align:center;transition:opacity .3s,transform .3s;box-shadow:0 0 40px rgba(97,255,170,.3)}
+  #transformReveal.show{display:block;opacity:1;transform:translate(-50%,-50%) scale(1)}
+  #transformReveal .trTitle{font-family:var(--font-display);font-size:15px;letter-spacing:.24em;color:var(--green);margin-bottom:14px}
+  #transformReveal .trRow{display:flex;align-items:center;gap:16px}
+  #transformReveal .trCol img{width:140px;height:140px;object-fit:cover;border:1px solid var(--line);display:block}
+  #transformReveal .trLbl{font-size:11px;letter-spacing:.06em;color:var(--green-soft);margin-top:6px;max-width:140px}
+  #transformReveal .trArrow{font-size:26px;color:var(--green);font-weight:900}
+
+  #chapterCard{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.9);z-index:32;
+    display:none;opacity:0;pointer-events:none;background:rgba(4,12,8,.94);border:2px solid var(--cyan);
+    padding:22px 30px;text-align:center;max-width:400px;transition:opacity .3s,transform .3s;box-shadow:0 0 40px rgba(41,241,255,.32)}
+  #chapterCard.show{display:block;opacity:1;transform:translate(-50%,-50%) scale(1)}
+  #chapterCard .ccTitle{font-family:var(--font-display);font-size:16px;letter-spacing:.22em;color:var(--cyan);margin-bottom:10px}
+  #chapterCard .hazardbar{margin:0 auto 14px;width:70px}
+  #chapterCard .ccText{font-size:14px;line-height:1.5;color:var(--ink)}
+
+  /* banniere d'appel (marée / prédateur) */
+  #callBanner{position:absolute;top:86px;left:50%;transform:translateX(-50%);z-index:27;display:none;text-align:center;pointer-events:none}
+  #callBanner.show{display:block}
+  #callBanner .cb{font-size:clamp(20px,3.2vw,36px);font-weight:900;font-style:italic;text-transform:uppercase;text-shadow:0 0 18px rgba(0,0,0,.6)}
+  #callBanner .cbsub{font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--green-soft);margin-top:4px}
+
+  /* barre de stress (blanchiment) */
+  #bleachWrap{position:absolute;right:18px;bottom:60px;width:210px;z-index:27;display:none}
+  #bleachWrap .bl-lbl{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--orange-soft);margin-bottom:5px}
+  #bleachBar{height:14px;background:rgba(0,0,0,.5);border:1px solid var(--line);border-radius:3px;overflow:hidden}
+  #bleachBar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--yellow),#fff);box-shadow:0 0 12px rgba(255,255,255,.5)}
+
+  /* mini-jeu photosynthèse (quiz) */
+  #photoOverlay{position:absolute;inset:0;z-index:28;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;text-shadow:0 1px 10px rgba(0,0,0,.85);
+    background:radial-gradient(820px 520px at 50% 42%,rgba(15,90,54,.4),transparent 64%),rgba(4,10,8,.55)}
+  #photoOverlay.show{display:flex}
+  #photoOverlay .ptitle{font-size:clamp(20px,3vw,34px);font-weight:900;font-style:italic;text-transform:uppercase;color:var(--green);letter-spacing:.04em;text-shadow:0 0 18px rgba(61,255,140,.5)}
+  #photoOverlay .psub{font-size:12px;letter-spacing:.26em;color:var(--green-soft);text-transform:uppercase;margin:6px 0 20px}
+  #pipeline{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;margin-bottom:24px}
+  .pstage{min-width:120px;padding:11px 13px;border:1px solid var(--line);border-radius:4px;background:rgba(8,28,18,.7);opacity:.32;transition:opacity .25s,box-shadow .25s,border-color .25s;
+    clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px))}
+  .pstage.on{opacity:1;border-color:var(--green);box-shadow:0 0 22px rgba(61,255,140,.3)}
+  .pstage .pn{font-size:10px;letter-spacing:.16em;color:var(--green-soft);text-transform:uppercase}
+  .pstage .pv{font-size:14px;font-weight:900;margin-top:4px}
+  .parrow{color:var(--green-soft);font-weight:900;font-size:16px}
+  #pQ{font-size:clamp(18px,2.6vw,28px);font-weight:800;max-width:820px;line-height:1.25;margin-bottom:10px}
+  #pHint{font-size:14px;letter-spacing:.05em;margin-bottom:14px}
+  #pHint .vg{color:var(--green);font-weight:800} #pHint .vy{color:var(--yellow);font-weight:800}
+  #pSplit{width:min(70vw,440px);height:16px;display:flex;border:1px solid var(--line);border-radius:3px;overflow:hidden;margin-bottom:8px}
+  #pSplit .sg{background:linear-gradient(90deg,var(--green-deep),var(--green));height:100%;width:50%}
+  #pSplit .sy{background:linear-gradient(90deg,var(--yellow),var(--orange));height:100%;width:50%}
+  #pTimer{width:min(70vw,440px);height:10px;background:rgba(0,0,0,.5);border:1px solid var(--line);border-radius:3px;overflow:hidden}
+  #pTimer i{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--green),var(--cyan));transition:width .08s linear}
+  #pVote{margin-top:12px;font-family:"SF Mono",monospace;font-size:14px;color:var(--green-soft);min-height:20px}
+  #pEff{margin-top:10px;font-size:15px;font-weight:800;letter-spacing:.06em;color:var(--cyan)}
+
+  /* phototaxie / vague verte */
+  #zoneBanner{position:absolute;top:86px;left:50%;transform:translateX(-50%);z-index:27;display:none;text-align:center;pointer-events:none}
+  #zoneBanner.show{display:block}
+  #zoneBanner .zb{font-size:clamp(22px,3.4vw,38px);font-weight:900;font-style:italic;text-transform:uppercase;color:var(--orange);text-shadow:0 0 18px rgba(255,122,24,.5)}
+  #zoneMeters{position:absolute;left:0;right:0;bottom:118px;z-index:27;display:none;justify-content:space-between;padding:0 5%;pointer-events:none}
+  #zoneMeters.show{display:flex}
+  .zm{width:40%;text-align:center}
+  .zm .zlbl{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--green-soft);margin-bottom:6px;font-weight:700}
+  .zm .zbar{height:16px;background:rgba(0,0,0,.5);border:1px solid var(--line);border-radius:3px;overflow:hidden}
+  .zm .zbar i{display:block;height:100%;width:0;background:var(--green);box-shadow:0 0 12px var(--green);transition:width .12s linear}
+
+  /* éveil de la colonie (calibration gamifiée) */
+  #awakenOv{position:absolute;inset:0;z-index:29;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;
+    background:radial-gradient(820px 560px at 50% 44%,rgba(15,90,54,.34),transparent 66%),rgba(4,10,8,.5);text-shadow:0 1px 10px rgba(0,0,0,.85)}
+  #awakenOv.show{display:flex}
+  #awakenOv .akick{font-size:13px;letter-spacing:.42em;color:var(--orange);text-transform:uppercase;margin-bottom:10px}
+  #awakenOv .atitle{font-size:clamp(26px,4.6vw,54px);font-weight:900;font-style:italic;text-transform:uppercase;line-height:1;letter-spacing:.02em}
+  #awakenOv .ainstr{font-size:clamp(15px,2vw,20px);max-width:720px;line-height:1.4;margin:16px 0 6px;color:#dff5e8}
+  #awakenOv .ainstr b{color:var(--ink)}
+  #awakenOv .ameaning{font-size:14px;letter-spacing:.06em;color:var(--green-soft);margin-bottom:20px;min-height:20px}
+  #awakenMeters{display:flex;gap:26px;width:min(80vw,620px);margin-bottom:14px}
+  #awakenMeters .am{flex:1;text-align:center}
+  #awakenMeters .amlbl{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--green-soft);margin-bottom:5px}
+  #awakenMeters .ambar{height:20px;background:rgba(0,0,0,.5);border:1px solid var(--line);border-radius:3px;overflow:hidden;position:relative}
+  #awakenMeters .ambar i{display:block;height:100%;width:0;transition:width .1s linear}
+  #awakenMeters .ambar .goal{position:absolute;top:0;bottom:0;width:2px;background:var(--ink);opacity:.7}
+  #awakenMeters .am.ok .ambar{border-color:var(--green);box-shadow:0 0 16px rgba(61,255,140,.4)}
+  #awakenMeters .am .amtick{font-size:15px;font-weight:900;color:var(--green);height:18px;margin-top:4px;opacity:0}
+  #awakenMeters .am.ok .amtick{opacity:1}
+  #awakenProg{font-size:12px;letter-spacing:.2em;color:var(--green-soft);text-transform:uppercase;margin-top:6px}
+  #awakenSignal{font-size:11px;letter-spacing:.14em;color:#8fb8a4;text-transform:uppercase;margin-top:10px}
+  #awakenReact{font-family:"SF Mono",monospace;font-size:15px;color:var(--cyan);margin-top:8px;min-height:20px}
+  #awakenBtns{margin-top:18px;display:flex;gap:12px}
+
+  /* CONTROL DECK */
+  #deck{display:flex;gap:14px;padding:12px 18px;align-items:center;z-index:30}
+  .ctl{display:flex;align-items:center;gap:10px}
+  .ctl label{font-size:10px;letter-spacing:.2em;color:var(--green-soft);text-transform:uppercase}
+  input[type=range]{-webkit-appearance:none;appearance:none;height:8px;width:240px;border-radius:6px;background:linear-gradient(90deg,var(--green-deep),var(--green));outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--ink);border:3px solid var(--green);box-shadow:0 0 12px var(--green);cursor:pointer}
+  input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--ink);border:3px solid var(--green);box-shadow:0 0 12px var(--green);cursor:pointer}
+  #simWrap{display:none}
+  #phaseJump{display:none;font-size:11px;background:var(--bg2);color:var(--ink);border:1px solid var(--line);padding:7px 8px;border-radius:3px}
+
+  .btn{font-family:inherit;font-weight:900;text-transform:uppercase;letter-spacing:.12em;font-size:13px;color:var(--bg);background:var(--green);border:none;padding:11px 18px;border-radius:3px;cursor:pointer;
+    clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));box-shadow:0 0 16px rgba(61,255,140,.4)}
+  .btn:hover{filter:brightness(1.12)}
+  .btn:disabled{opacity:.4;cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--green);border:1px solid var(--green);box-shadow:none}
+  .btn.orange{background:var(--orange);box-shadow:0 0 16px rgba(255,122,24,.4)}
+  .btn.yellow{background:var(--yellow);color:#eef4ff;box-shadow:0 0 16px rgba(34,85,221,.5)}
+
+  /* SCREENS */
+  .screen{position:absolute;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:26px;
+    background:radial-gradient(900px 600px at 50% 30%,rgba(15,90,54,.35),transparent 60%),rgba(4,10,8,.93);overflow:auto}
+  .screen.hidden{display:none}
+  .kicker{font-size:13px;letter-spacing:.5em;color:var(--orange);text-transform:uppercase;margin-bottom:12px}
+  .title{font-size:clamp(40px,8.4vw,110px);font-weight:900;font-style:italic;text-transform:uppercase;line-height:.88;letter-spacing:-.01em;
+    background:linear-gradient(180deg,var(--green-soft),var(--green) 55%,var(--green-deep));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 28px rgba(61,255,140,.35))}
+  .sci{font-style:italic;font-size:clamp(13px,1.8vw,18px);color:var(--green-soft);letter-spacing:.12em;margin-top:10px}
+  .lede{max-width:680px;font-size:clamp(14px,1.7vw,17px);line-height:1.5;color:#cfe9da;margin:18px 0 22px}
+  .row{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;align-items:center}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:3px;overflow:hidden}
+  .seg button{font-family:inherit;font-weight:800;letter-spacing:.08em;text-transform:uppercase;font-size:12px;color:var(--green-soft);background:transparent;border:none;padding:9px 14px;cursor:pointer}
+  .seg button.on{background:var(--green);color:var(--bg)}
+  .note{font-size:12px;color:#8fb8a4;margin-top:16px;max-width:640px;line-height:1.5}
+  .note b{color:var(--green-soft)}
+  .calState{font-size:13px;letter-spacing:.1em;margin-top:10px}
+  .calState.ok{color:var(--green)} .calState.todo{color:var(--orange-soft)}
+  .credit{position:absolute;bottom:14px;font-size:10px;letter-spacing:.2em;color:#5c7a6a;text-transform:uppercase}
+  .credit .logoRow{display:flex;gap:10px;justify-content:center;align-items:center;margin-bottom:9px}
+  .credit .labLogo{height:28px;width:auto;display:block;background:#fff;border-radius:4px;padding:4px 9px}
+  #endTitle{font-size:clamp(40px,8vw,96px)}
+  .win #endTitle{background:linear-gradient(180deg,var(--green-soft),var(--green));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .lose #endTitle{color:var(--orange);filter:drop-shadow(0 0 24px rgba(255,122,24,.4))}
+
+  /* CALIBRATION du matin */
+  #calScreen .calGrid{display:flex;gap:26px;flex-wrap:wrap;justify-content:center;align-items:flex-start;max-width:1000px}
+  #calStage{position:relative;line-height:0;border:2px solid var(--line);border-radius:4px;overflow:hidden;background:#000;flex:0 0 auto}
+  #calVideo{width:min(72vw,520px);height:auto;display:block}
+  #calOverlay{position:absolute;inset:0;cursor:move}
+  .calPanel{flex:1 1 280px;min-width:260px;max-width:380px;text-align:left}
+  .calStep{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px}
+  .calNum{flex:0 0 26px;height:26px;border:1px solid var(--green);color:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px}
+  .calStep .ct{font-size:14px;line-height:1.4;color:#cfe9da}
+  .calStep .ct b{color:var(--ink)}
+  .swatch{display:inline-block;width:16px;height:16px;border-radius:3px;vertical-align:middle;border:1px solid rgba(255,255,255,.4);margin:0 2px}
+  .calRead{font-size:12px;letter-spacing:.06em;color:var(--green-soft);margin:6px 0 14px}
+  .sliderRow{display:flex;align-items:center;gap:10px;margin:8px 0}
+  .sliderRow label{font-size:11px;letter-spacing:.12em;color:var(--green-soft);text-transform:uppercase;flex:0 0 96px}
+  .sliderRow input{width:150px}
+  .ok{color:var(--green)} .todo{color:var(--orange-soft)}
+
+  /* transitions & mascotte */
+  #mascotAvatar{position:absolute;left:82px;bottom:12px;width:clamp(70px,9vw,100px);z-index:24;
+    filter:drop-shadow(0 0 14px rgba(0,0,0,.55));transition:transform .2s ease;pointer-events:none}
+  #mascotAvatar.pulse{transform:translateY(-5px) scale(1.05)}
+  .mascot{display:block}
+  .mascot-title{width:clamp(104px,17vw,160px);margin:2px auto 4px;filter:drop-shadow(0 0 22px rgba(61,255,140,.35))}
+  .mascot-end{width:clamp(116px,15vw,146px);margin:0 auto 6px;filter:drop-shadow(0 0 22px rgba(61,255,140,.3))}
+  .endPhoto{width:min(80vw,420px);height:180px;object-fit:cover;border:2px solid var(--green);border-radius:6px;margin:14px 0 4px;box-shadow:0 0 24px rgba(97,255,170,.25)}
+  .endPhotoCaption{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--green-soft);margin-bottom:14px}
+  #sweep{position:fixed;inset:0;z-index:45;pointer-events:none;opacity:0;
+    background:linear-gradient(100deg,transparent 28%,var(--sweepc,rgba(61,255,140,.85)) 50%,transparent 72%)}
+  #sweep.go{animation:sweepAcross .6s ease-in-out}
+  @keyframes sweepAcross{0%{transform:translateX(-110%) skewX(-10deg);opacity:1}100%{transform:translateX(110%) skewX(-10deg);opacity:1}}
+  .pstage.on{animation:stagePop .35s ease}
+  @keyframes stagePop{0%{transform:scale(1)}45%{transform:scale(1.12)}100%{transform:scale(1)}}
+  #callBanner.show .cb{animation:zbPulse 1.2s ease-in-out infinite}
+  #zoneBanner.show .zb{animation:zbPulse 1.1s ease-in-out infinite}
+  @keyframes zbPulse{0%,100%{opacity:1}50%{opacity:.6}}
+  #photoOverlay.show .ptitle{animation:zbPulse 1.6s ease-in-out infinite}
+  button:focus-visible,.seg button:focus-visible,input[type=range]:focus-visible{outline:2px solid var(--green);outline-offset:3px}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}#sweep{display:none}}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <div id="hud">
+    <div class="panel" id="phaseName"><span class="tag">Phase</span>
+      <div class="big" id="phBig">PRÊT ?</div><div class="sub" id="phSub">colonie en attente</div>
+      <div id="phaseBar"><i></i></div></div>
+    <div class="panel stat"><span class="tag">Manche</span>
+      <div class="num mono" id="roundTxt">—</div><div class="lbl">progression</div></div>
+    <div class="panel stat"><span class="tag">Marée</span>
+      <div class="num mono" id="tideTxt">—</div><div class="lbl" id="tideSub">cycle</div></div>
+    <div class="panel" id="energyPanel" style="display:flex;flex-direction:column;justify-content:center;gap:8px">
+      <span class="tag">Énergie de la colonie</span>
+      <div class="bar"><i id="energyFill"></i></div>
+      <div class="mono" style="font-size:11px;color:var(--cyan);letter-spacing:.1em" id="energyTxt">0 %</div></div>
+    <div class="panel" id="competePanel"><span class="tag">Colonies</span>
+      <div class="cc" id="ccL"><div class="cn mono" id="scoreLtxt">0</div><div class="cl">Groupe 1</div></div>
+      <div class="cc" id="ccR"><div class="cn mono" id="scoreRtxt">0</div><div class="cl">Groupe 2</div></div></div>
+    <div class="panel stat"><span class="tag">Survie</span>
+      <div class="hearts" id="hearts"></div><div class="lbl">santé</div></div>
+  </div>
+
+  <div id="stage">
+    <canvas id="scene"></canvas>
+    <img id="mascotAvatar" src="assets/mascotte-repos.png" alt="">
+    <div id="gauge">
+      <div class="gpct mono" id="gPct">0%</div>
+      <div id="gtube"><div id="gband"></div><div id="gthresh"></div><div id="gfill"></div></div>
+      <div class="glab" id="gaugeLab">Verdeur<br>colonie</div></div>
+
+    <div id="cam" class="viewframe"><span class="vfc vf-tl"></span><span class="vfc vf-tr"></span><span class="vfc vf-bl"></span><span class="vfc vf-br"></span>
+      <div class="wrap" id="camWrapFull"><video id="video" autoplay muted playsinline></video><canvas id="camMask"></canvas>
+        <div id="camSplit">
+          <div class="camDivLine" id="camDivLine"></div>
+          <div class="camZoneLbl camZoneLbl-l"><div class="gName">Groupe 1 <span class="voyant" id="voyDotL">NC</span></div><div class="gMsg" id="gMsgL"></div></div>
+          <div class="camZoneLbl camZoneLbl-r"><div class="gName">Groupe 2 <span class="voyant" id="voyDotR">NC</span></div><div class="gMsg" id="gMsgR"></div></div>
+        </div>
+      </div>
+      <div class="clab" id="camLab">vert <span id="camG">0</span> · <b>bleu</b> <span id="camY">0</span><span class="voyant" id="voyDot">NC</span></div></div>
+
+    <div id="flash"><div class="fbig" id="flashBig"></div><div class="fsub" id="flashSub"></div></div>
+    <div id="info"><img id="infoImg" alt=""><div class="ititle" id="infoTitle"></div><div class="itext" id="infoText"></div></div>
+
+    <div id="callBanner"><div class="cb" id="cbTxt"></div><div class="cbsub" id="cbSub"></div></div>
+
+    <div id="bleachWrap"><div class="bl-lbl">Stress des algues · blanchiment</div><div id="bleachBar"><i></i></div></div>
+
+    <!-- quiz -->
+    <div id="photoOverlay">
+      <div class="ptitle">Usine à sucres</div>
+      <div class="psub">convertir la lumière en énergie — votez vert ou bleu</div>
+      <div id="pipeline">
+        <div class="pstage" data-s="0"><div class="pn">Étape 1</div><div class="pv">Lumière captée</div></div>
+        <div class="parrow">▸</div>
+        <div class="pstage" data-s="1"><div class="pn">Étape 2</div><div class="pv">Eau cassée · O₂</div></div>
+        <div class="parrow">▸</div>
+        <div class="pstage" data-s="2"><div class="pn">Étape 3</div><div class="pv">ATP / NADPH</div></div>
+        <div class="parrow">▸</div>
+        <div class="pstage" data-s="3"><div class="pn">Étape 4</div><div class="pv">Sucre fabriqué</div></div>
+      </div>
+      <div id="pQ"></div>
+      <div id="pHint"></div>
+      <div id="pSplit"><div class="sg" id="pSg"></div><div class="sy" id="pSy"></div></div>
+      <div id="pTimer"><i></i></div>
+      <div id="pVote"></div>
+      <div id="pEff"></div>
+    </div>
+
+    <!-- phototaxie / vague verte -->
+    <div id="zoneBanner"><div class="zb" id="zbTxt"></div></div>
+    <div id="zoneMeters">
+      <div class="zm"><div class="zlbl" id="zmLlbl">Groupe 1</div><div class="zbar"><i id="zmL"></i></div></div>
+      <div class="zm"><div class="zlbl" id="zmRlbl">Groupe 2</div><div class="zbar"><i id="zmR"></i></div></div>
+    </div>
+
+    <!-- éveil de la colonie -->
+    <div id="awakenOv">
+      <div class="akick">Réveil de la colonie</div>
+      <div class="atitle" id="awTitle">—</div>
+      <div class="ainstr" id="awInstr">—</div>
+      <div class="ameaning" id="awMeaning"></div>
+      <div id="awakenMeters">
+        <div class="am" id="amL"><div class="amlbl" id="amLlbl">Groupe 1 <span class="voyant" id="voyAwL">NC</span></div>
+          <div class="ambar"><span class="goal" id="amLgoal"></span><i id="amLfill"></i></div><div class="amtick">✔ prêt</div></div>
+        <div class="am" id="amR"><div class="amlbl" id="amRlbl">Groupe 2 <span class="voyant" id="voyAwR">NC</span></div>
+          <div class="ambar"><span class="goal" id="amRgoal"></span><i id="amRfill"></i></div><div class="amtick">✔ prêt</div></div>
+      </div>
+      <div id="awakenReact"></div>
+      <div id="awakenSignal">Signal caméra <span class="voyant" id="voyAwAll">NC</span></div>
+      <div id="awakenProg">étape 1</div>
+      <div id="awakenBtns">
+        <button class="btn ghost" id="awSkip">Passer l'échauffement</button>
+        <button class="btn orange" id="awQuit">Menu</button>
+      </div>
+    </div>
+
+    <div id="pvLegend">
+      <span><i style="background:var(--green)"></i><b id="pvLgG">algues au soleil</b></span>
+      <span><i style="background:var(--yellow)"></i><b id="pvLgY">cachées dans le sable</b></span>
+    </div>
+
+    <div id="transformReveal">
+      <div class="trTitle">DU GRIS AU VERT</div>
+      <div class="trRow">
+        <div class="trCol"><img id="trBefore" alt=""><div class="trLbl">avant · pas d'algue</div></div>
+        <div class="trArrow">▸</div>
+        <div class="trCol"><img id="trAfter" alt=""><div class="trLbl">après · Tetraselmis capturées</div></div>
+      </div>
+    </div>
+
+    <div id="chapterCard">
+      <div class="ccTitle" id="ccTitle"></div>
+      <div class="hazardbar"></div>
+      <div class="ccText" id="ccText"></div>
+    </div>
+  </div>
+
+  <div id="deck">
+    <div class="ctl" id="simWrap"><label for="sim">Verdeur (test)</label><input type="range" id="sim" min="0" max="100" value="10"></div>
+    <select id="phaseJump" class="mono">
+      <option value="">Aller a la phase...</option>
+      <option value="acquire">Acquisition</option>
+      <option value="sun">Soleil</option>
+      <option value="maree">Maree</option>
+      <option value="danger">Danger</option>
+      <option value="predator">Chasse ciblee</option>
+      <option value="carnivore">Plante carnivore</option>
+      <option value="earthworm">Ver de terre</option>
+      <option value="bleach">Blanchiment</option>
+      <option value="phototaxie">Phototaxie</option>
+      <option value="greenwave">Vague verte</option>
+      <option value="night">Nuit</option>
+      <option value="photo">Quiz</option>
+      <option value="cheer">Ovation</option>
+      <option value="final">Grande maree</option>
+    </select>
+    <div style="flex:1"></div>
+    <button class="btn ghost" id="sndBtn">Son : on</button>
+    <button class="btn ghost" id="fsBtn">Plein écran</button>
+    <button class="btn orange" id="quitBtn">Menu</button>
+  </div>
+
+  <div id="sweep"></div>
+
+  <!-- TITLE -->
+  <div class="screen" id="titleScreen">
+    <div class="kicker">Fête de la science · jeu coopératif</div>
+    <div class="viewframe" style="display:inline-block"><span class="vfc vf-tl"></span><span class="vfc vf-tr"></span><span class="vfc vf-bl"></span><span class="vfc vf-br"></span>
+      <img class="mascot mascot-title" src="assets/mascotte-repos.png" alt=""></div>
+    <h1 class="title"><span class="glitchtitle" data-text="Le Peuple">Le Peuple</span><br><span class="holoword">Vert</span></h1>
+    <div class="sci">Symsagittifera roscoffensis · le ver de Roscoff</div>
+    <p class="lede">Vous êtes une colonie de vers photosymbiotiques. Exposez vos algues (face <b style="color:var(--green)">verte</b>)
+      au soleil pour fabriquer de l'énergie, et plongez dans le sable (face <b style="color:var(--yellow)">bleue</b>) dès qu'un danger surgit.
+      La caméra mesure le rapport vert / bleu de la colonie.</p>
+    <div class="row" style="margin-bottom:8px">
+      <span style="font-size:11px;letter-spacing:.2em;color:var(--green-soft);text-transform:uppercase">Entrée</span>
+      <div class="seg" id="modeSeg"><button data-mode="cam" class="on">Caméra</button><button data-mode="sim">Simulation</button></div>
+      <span style="font-size:11px;letter-spacing:.2em;color:var(--green-soft);text-transform:uppercase">Groupe</span>
+      <div class="seg" id="profSeg"><button data-prof="6e">Explorateurs · 6e</button><button data-prof="terminale" class="on">Stratèges · Terminale</button></div>
+    </div>
+    <div class="row" style="margin-top:18px">
+      <button class="btn" id="startBtn">Commencer</button>
+      <button class="btn ghost" id="calBtn">Réglage salle (matin)</button>
+    </div>
+    <div class="calState todo" id="calState">Salle non calibrée — lancez le réglage du matin une fois sur place.</div>
+    <p class="note" id="camNote">Le réglage du matin capte le vert et le bleu sous l'éclairage réel : à faire <b>une seule fois</b> sur place, il est mémorisé.
+      Chaque partie s'ouvre ensuite par le <b>réveil de la colonie</b>, qui apprend au groupe le sens des couleurs et vérifie la lecture.
+      La webcam exige un contexte sécurisé : ouvrez la page en <b>https</b> ou via <b>localhost</b>. Le mode Simulation reproduit la partie au curseur.</p>
+    <div class="hazardbar" style="width:min(90vw,520px);margin:16px 0 4px"></div>
+    <div class="credit">
+      <div class="logoRow">
+        <img class="labLogo" src="assets/logo-plbs.jpg" alt="PLBS - Plateformes Lilloises en Biologie et Santé">
+        <img class="labLogo" src="assets/logo-ugsf.jpg" alt="UGSF - Unité de Glycobiologie Structurale et Fonctionnelle">
+      </div>
+      Créé par Corentin Spriet, PhD, HDR · festival du CNRS Hauts-de-France
+    </div>
+  </div>
+
+  <!-- CALIBRATION matin -->
+  <div class="screen hidden" id="calScreen">
+    <div class="kicker">Réglage salle · une fois le matin</div>
+    <div class="calGrid">
+      <div id="calStage"><video id="calVideo" autoplay muted playsinline></video><canvas id="calOverlay"></canvas></div>
+      <div class="calPanel">
+        <div class="calStep"><div class="calNum">1</div><div class="ct"><b>Cadrez la zone.</b> Déplacez le rectangle vert sur l'espace du groupe, redimensionnez par le coin. Tout ce qui est dehors est ignoré.</div></div>
+        <div class="calStep"><div class="calNum">2</div><div class="ct"><b>Capturez le vert.</b> Faites lever la face verte, cliquez, gardez levé ~1,5 s (moyenne sur plusieurs images).<br><span id="rdGreen" class="todo">non calibré</span> <span class="swatch" id="swGreen" style="background:#444"></span></div></div>
+        <div class="calStep"><div class="calNum">3</div><div class="ct"><b>Capturez le bleu.</b> Face bleue levée, cliquez, gardez levé ~1,5 s.<br><span id="rdYellow" class="todo">non calibré</span> <span class="swatch" id="swYellow" style="background:#444"></span></div></div>
+        <div class="row" style="justify-content:flex-start;margin:6px 0 14px">
+          <button class="btn green" id="capGreen" style="background:var(--green);color:var(--bg)">Capturer vert</button>
+          <button class="btn yellow" id="capYellow">Capturer bleu</button>
+        </div>
+        <div class="calRead" id="calReadTxt">Le masque montre en direct les pixels classés vert / bleu. Ajustez si le fond est capté à tort :</div>
+        <div class="sliderRow"><label>Saturation min</label><input type="range" id="satMin" min="10" max="80" value="20"><span class="mono" id="satTxt" style="font-size:11px">0.20</span></div>
+        <div class="sliderRow"><label>Tolérance °</label><input type="range" id="tol" min="10" max="45" value="35"><span class="mono" id="tolTxt" style="font-size:11px">35</span></div>
+        <div class="row" style="justify-content:flex-start;margin-top:16px">
+          <button class="btn" id="calSave" disabled>Enregistrer & retour</button>
+          <button class="btn ghost" id="calBack">Retour</button>
+        </div>
+      </div>
+    </div>
+    <div class="credit">Calibration ratiométrique · teinte HSV · moyennée ~1,5 s</div>
+  </div>
+
+  <!-- END -->
+  <div class="screen hidden" id="endScreen">
+    <div class="kicker" id="endKick">résultat</div>
+    <img class="mascot mascot-end" id="endMascotUse" src="assets/mascotte-victoire.png" alt="">
+    <h1 class="title" id="endTitle">—</h1>
+    <p class="lede" id="endText"></p>
+    <img class="endPhoto" src="assets/photo-plage.jpg" alt="">
+    <div class="endPhotoCaption">le vrai ver de Roscoff dans son habitat, à marée basse</div>
+    <p class="mono" id="endStats" style="font-size:13px;letter-spacing:.08em;color:var(--green-soft);margin-bottom:22px"></p>
+    <div class="row"><button class="btn" id="againBtn">Rejouer</button><button class="btn ghost" id="menuBtn">Menu</button></div>
+    <div class="credit">Symsagittifera roscoffensis · photosymbiose</div>
+  </div>
+</div>
+
+<script>
+"use strict";
+const $=s=>document.querySelector(s);
+const scene=$("#scene"), ctx=scene.getContext("2d");
+const video=$("#video"), calVideo=$("#calVideo"), calOverlay=$("#calOverlay"), calOctx=calOverlay.getContext("2d");
+const camMask=$("#camMask"), camMaskCtx=camMask.getContext("2d");
+
+/* ---- illustrations (assets/) ---- */
+function loadImg(src){const im=new Image();im.src="assets/"+src;return im;}
+const IMG={
+  wormAdult:loadImg("ver-adulte.png"), wormJuvenile:loadImg("ver-juvenile.png"),
+  earthworm:loadImg("ver-de-terre.png"), bird:loadImg("oiseau.png"),
+  plant:loadImg("plante-carnivore.png"), plantClosed:loadImg("plante-carnivore-fermee.png"), algae:loadImg("algue.png"),
+  mascotte:{"m-repos":loadImg("mascotte-repos.png"),"m-ray":loadImg("mascotte-joie.png"),
+            "m-hide":loadImg("mascotte-cache.png"),"m-win":loadImg("mascotte-victoire.png")}
+};
+function drawImgCentered(c,img,x,y,h,rot){
+  if(!img.complete||!img.naturalWidth) return;
+  const ar=img.naturalWidth/img.naturalHeight, w=h*ar;
+  c.save();c.translate(x,y);if(rot)c.rotate(rot);
+  c.drawImage(img,-w/2,-h/2,w,h);
+  c.restore();
+}
+
+let MODE="cam", PROFILE="terminale";
+let G=0, lastR=0, lastG=0, lastY=0;
+let camReady=false, camStream=null;
+
+/* ---- profils d'âge ---- */
+const PROF={
+  "6e":{ warn:3.2, sunDur:6, mareeDur:15, acquireDur:12, finalDur:13,
+         hideThresh:.44, light:1.12, rounds:2, hp:5, showEnergy:false, compete:false, predator:false,
+         quizN:3, quizT:13, mareeInt:3.8, winAt:45,
+         carnivoreDur:10, earthwormDur:13, cheerDur:8, bleachDur:13 },
+  "terminale":{ warn:1.6, sunDur:5, mareeDur:12, acquireDur:11, finalDur:14,
+         hideThresh:.30, light:.92, rounds:2, hp:3, showEnergy:true, compete:true, predator:true,
+         quizN:5, quizT:11, mareeInt:2.6, winAt:60,
+         carnivoreDur:8, earthwormDur:11, cheerDur:7, bleachDur:10 }
+};
+function P(){return PROF[PROFILE];}
+
+/* ---- sons (WebAudio, sans fichier externe) ---- */
+let AC=null, muted=false;
+function sfx(kind){
+  if(muted) return;
+  try{
+    AC=AC||new (window.AudioContext||window.webkitAudioContext)();
+    if(AC.state==="suspended")AC.resume();
+    const t0=AC.currentTime;
+    const tone=(f,dur,off=0,type="square",g=.07)=>{
+      const o=AC.createOscillator(),gn=AC.createGain();
+      o.type=type;o.frequency.value=f;
+      gn.gain.setValueAtTime(g,t0+off);
+      gn.gain.exponentialRampToValueAtTime(.0001,t0+off+dur);
+      o.connect(gn);gn.connect(AC.destination);
+      o.start(t0+off);o.stop(t0+off+dur);
+    };
+    if(kind==="sun"){tone(660,.12,0,"triangle",.09);tone(880,.18,.1,"triangle",.09);}
+    if(kind==="danger"){tone(230,.16,0,"sawtooth",.1);tone(185,.22,.15,"sawtooth",.1);}
+    if(kind==="tick"){tone(980,.05,0,"square",.04);}
+    if(kind==="hit"){tone(130,.35,0,"sawtooth",.13);tone(98,.4,.08,"sawtooth",.11);}
+    if(kind==="dodge"){tone(520,.1,0,"triangle",.09);tone(780,.16,.08,"triangle",.09);}
+    if(kind==="acquired"){[392,523,659].forEach((f,i)=>tone(f,.2,i*.11,"triangle",.09));}
+    if(kind==="win"){[523,659,784,1046].forEach((f,i)=>tone(f,.24,i*.13,"triangle",.1));}
+    if(kind==="lose"){[330,262,196].forEach((f,i)=>tone(f,.32,i*.18,"sawtooth",.09));}
+    if(kind==="bleach"){tone(300,.5,0,"sine",.12);tone(240,.6,.1,"sine",.1);}
+  }catch(e){}
+}
+let amb=null;
+function startAmbience(){
+  /* nappe d'ambiance continue retirée (retour terrain : vrombissement gênant pendant
+     toute la session) — on ne garde que les bruitages ponctuels de sfx() par événement. */
+}
+function stopAmbience(){
+  if(!amb)return;
+  try{amb.master.gain.exponentialRampToValueAtTime(0.0001,AC.currentTime+0.6);
+    const a=amb;amb=null;setTimeout(()=>a.nodes.forEach(n=>{try{n.stop()}catch(e){}}),700);
+  }catch(e){amb=null;}
+}
+function updateAmbience(){
+  if(!amb||muted) return;
+  try{
+    const now=AC.currentTime;
+    const night=(phase==="maree"&&mareeTarget==="night")||phase==="night";
+    const stressT=(phase==="bleach")?Math.min(1,stress):0;
+    let cutoff=night?165:lerp(300,1000,Math.max(0,Math.min(1,light)));
+    cutoff=lerp(cutoff,cutoff*0.7,stressT*0.6);
+    amb.filt.frequency.setTargetAtTime(cutoff,now,1.1);
+    let gTarget=0.045;
+    if(phase==="final")gTarget=0.06;
+    if(phase==="bleach")gTarget=0.045-stressT*0.014;
+    amb.master.gain.setTargetAtTime(gTarget,now,1.4);
+    amb.lfo.frequency.setTargetAtTime(0.07+stressT*0.35,now,1.0);
+    amb.o2.detune.setTargetAtTime(7+stressT*26,now,1.0);
+  }catch(e){}
+}
+let reduceMotion=window.matchMedia&&window.matchMedia("(prefers-reduced-motion:reduce)").matches;
+function sweep(color){
+  if(reduceMotion)return;
+  const s=$("#sweep");if(!s)return;
+  s.style.setProperty("--sweepc",color||"rgba(61,255,140,.85)");
+  s.classList.remove("go");void s.offsetWidth;s.classList.add("go");
+}
+function stopCam(){
+  if(camStream){camStream.getTracks().forEach(tr=>tr.stop());camStream=null;}
+  camReady=false;video.srcObject=null;calVideo.srcObject=null;
+}
+
+/* ---- analyse caméra (ratiométrique HSV) ---- */
+const CW=176, CH=132, MINPX=8, MINPX_SIDE=4;
+const work=document.createElement("canvas"); work.width=CW; work.height=CH;
+const wctx=work.getContext("2d",{willReadFrequently:true});
+const maskCv=document.createElement("canvas"); maskCv.width=CW; maskCv.height=CH;
+const maskCtx=maskCv.getContext("2d");
+let zL={g:0,y:0}, zR={g:0,y:0};
+let prevFrame=null, prevSimV=0;
+
+const cal={ green:{h:144}, yellow:{h:224}, sMin:0.20, vMin:0.06, vMax:0.99, tol:35,
+            roi:{x:0.14,y:0.16,w:0.72,h:0.68} };
+
+function rgb2hsv(r,g,b){
+  r/=255;g/=255;b/=255;
+  const mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn;
+  let h=0;
+  if(d){ if(mx===r)h=((g-b)/d)%6; else if(mx===g)h=(b-r)/d+2; else h=(r-g)/d+4; h*=60; if(h<0)h+=360; }
+  return {h, s:mx===0?0:d/mx, v:mx};
+}
+function hueDist(a,b){const x=Math.abs(a-b);return Math.min(x,360-x);}
+
+/* source vidéo active : calVideo pendant l'écran de calibration (state==="cal"),
+   sinon toujours video — calVideo reste "readyState>=2" indéfiniment même une fois
+   masqué (écran caché), donc s'y fier hors calibration servait une image figée. */
+function camSrc(){
+  if(state==="cal") return calVideo.readyState>=2?calVideo:(camReady&&video.readyState>=2?video:null);
+  return camReady&&video.readyState>=2?video:(calVideo.readyState>=2?calVideo:null);
+}
+function analyze(buildMask){
+  const src = camSrc();
+  if(!src) return null;
+  wctx.drawImage(src,0,0,CW,CH);
+  let d;
+  try{ d=wctx.getImageData(0,0,CW,CH).data; }catch(e){ return null; }
+  const rx=Math.floor(cal.roi.x*CW), ry=Math.floor(cal.roi.y*CH);
+  const rw=Math.floor(cal.roi.w*CW), rh=Math.floor(cal.roi.h*CH);
+  let g=0,y=0, mask=null;
+  const mid=rx+rw/2; let gL=0,yL=0,gR=0,yR=0;
+  if(buildMask) mask=maskCtx.createImageData(CW,CH);
+  for(let j=ry;j<ry+rh;j++){
+    for(let i=rx;i<rx+rw;i++){
+      const idx=(j*CW+i)*4;
+      const hsv=rgb2hsv(d[idx],d[idx+1],d[idx+2]);
+      let cls=0;
+      if(hsv.s>=cal.sMin && hsv.v>=cal.vMin && hsv.v<=cal.vMax){
+        const dg=hueDist(hsv.h,cal.green.h), dy=hueDist(hsv.h,cal.yellow.h);
+        if(dg<=cal.tol && dg<=dy){ g++; cls=1; if(i<mid)gL++;else gR++; }
+        else if(dy<=cal.tol){ y++; cls=2; if(i<mid)yL++;else yR++; }
+      }
+      if(mask){
+        if(cls===1){mask.data[idx]=20;mask.data[idx+1]=255;mask.data[idx+2]=120;mask.data[idx+3]=240;}
+        else if(cls===2){mask.data[idx]=34;mask.data[idx+1]=95;mask.data[idx+2]=255;mask.data[idx+3]=240;}
+        else {mask.data[idx+3]=70;}
+      }
+    }
+  }
+  if(mask) maskCtx.putImageData(mask,0,0);
+  lastG=g; lastY=y;
+  zL.g=gL; zL.y=yL; zR.g=gR; zR.y=yR;
+  const tot=g+y;
+  return tot>=MINPX ? g/tot : null;
+}
+
+/* lecture unifiée : global + fractions par zone (caméra ou simulation) */
+function readSignal(){
+  if(MODE==="cam" && camReady){
+    const R=analyze($("#cam").dataset.dbg==="1");
+    const totL=zL.g+zL.y, totR=zR.g+zR.y;
+    return { G:R,
+      gL: totL? zL.g/totL:0, yL: totL? zL.y/totL:0,
+      gR: totR? zR.g/totR:0, yR: totR? zR.y/totR:0,
+      live:(totL+totR)>=MINPX, liveL: totL>=MINPX_SIDE, liveR: totR>=MINPX_SIDE };
+  } else {
+    let v=(+$("#sim").value)/100;
+    // en simulation, les deux zones reflètent le curseur (test du déroulé, pas de la précision spatiale)
+    return { G:v, gL:v, yL:1-v, gR:v, yR:1-v, live:true, liveL:true, liveR:true };
+  }
+}
+
+/* voyant : indicateur visuel "signal capté ou non", indépendant du ratio vert/bleu */
+function setVoyant(el,ok){
+  if(!el) return;
+  el.textContent=ok?"OK":"NC";
+  el.classList.toggle("on",!!ok); el.classList.toggle("off",!ok);
+}
+
+/* vue caméra : trait vertical superposé sur le flux unique pour matérialiser groupe 1 / groupe 2 */
+const LR_PHASES=new Set(["acquire","predator","phototaxie"]);
+function updateCamSplit(showSplit){
+  const split=$("#camSplit"); if(!split) return;
+  split.style.display=showSplit?"block":"none";
+  if(showSplit){
+    const line=$("#camDivLine");
+    if(line) line.style.left=((cal.roi.x+cal.roi.w/2)*100)+"%";
+  }
+}
+function groupMsg(side){
+  if(phase==="acquire") return side===acqSide ? "attirez (vert)" : "peu importe";
+  if(phase==="predator") return side===predSide ? "cachez (bleu)" : "produisez (vert)";
+  if(phase==="phototaxie") return ((side==="L")===(pheading==="left")) ? "au vert" : "au bleu";
+  return "";
+}
+function updateGroupMsgs(){
+  if(state!=="play" || !LR_PHASES.has(phase)){ return; }
+  const mL=groupMsg("L"), mR=groupMsg("R");
+  const elL=$("#gMsgL"), elR=$("#gMsgR");
+  if(elL){elL.textContent=mL;elL.classList.toggle("warn",/bleu|cachez/.test(mL));}
+  if(elR){elR.textContent=mR;elR.classList.toggle("warn",/bleu|cachez/.test(mR));}
+}
+function updateCamHud(){
+  setVoyant($("#voyDot"),sig.live); setVoyant($("#voyDotL"),sig.liveL); setVoyant($("#voyDotR"),sig.liveR);
+  setVoyant($("#voyAwAll"),sig.live); setVoyant($("#voyAwL"),sig.liveL); setVoyant($("#voyAwR"),sig.liveR);
+  updateGroupMsgs();
+  if(MODE==="cam"&&camReady){
+    $("#camG").textContent=lastG;$("#camY").textContent=lastY;
+    if($("#cam").dataset.dbg==="1"){camMask.width=CW;camMask.height=CH;camMaskCtx.clearRect(0,0,CW,CH);camMaskCtx.drawImage(maskCv,0,0);camMask.style.display="block";}
+    else camMask.style.display="none";
+  }
+}
+
+/* lecture mouvement (ver de terre) : diff de luminance image à image */
+function readMotion(){
+  if(MODE==="sim"){
+    const v=(+$("#sim").value)/100, d=Math.abs(v-prevSimV); prevSimV=v;
+    return Math.min(1,d*14);
+  }
+  const src = camSrc();
+  if(!src) return null;
+  wctx.drawImage(src,0,0,CW,CH);
+  let d; try{ d=wctx.getImageData(0,0,CW,CH).data; }catch(e){ return null; }
+  const rx=Math.floor(cal.roi.x*CW), ry=Math.floor(cal.roi.y*CH);
+  const rw=Math.floor(cal.roi.w*CW), rh=Math.floor(cal.roi.h*CH);
+  if(!prevFrame){ prevFrame=new Uint8ClampedArray(d); return 0; }
+  let diff=0,n=0;
+  for(let j=ry;j<ry+rh;j+=2){
+    for(let i=rx;i<rx+rw;i+=2){
+      const idx=(j*CW+i)*4;
+      diff+=Math.abs((d[idx]+d[idx+1]+d[idx+2])-(prevFrame[idx]+prevFrame[idx+1]+prevFrame[idx+2])); n++;
+    }
+  }
+  prevFrame.set(d);
+  return Math.max(0,Math.min(1,(n?diff/n:0)/140));
+}
+
+/* capture moyennée ~1,5 s (calibration matin) */
+let calAcc=null, calAccKey=null, calAccUntil=0;
+function beginCapture(key){
+  const src = calVideo.readyState>=2 ? calVideo : video;
+  if(!src || src.readyState<2){ setFlash("Caméra pas prête","patientez une seconde","var(--orange)",1400); return; }
+  calAccKey=key; calAcc=new Float32Array(360); calAccUntil=performance.now()+1500;
+  $("#calReadTxt").textContent = key==="green" ? "Capture du VERT en cours… gardez les cartes levées." : "Capture du BLEU en cours… gardez les cartes levées.";
+}
+function accumulate(){
+  if(!calAccKey) return;
+  const src=calVideo.readyState>=2?calVideo:video;
+  wctx.drawImage(src,0,0,CW,CH);
+  const d=wctx.getImageData(0,0,CW,CH).data;
+  const rx=(cal.roi.x*CW)|0, ry=(cal.roi.y*CH)|0, rw=(cal.roi.w*CW)|0, rh=(cal.roi.h*CH)|0;
+  for(let j=ry;j<ry+rh;j++)for(let i=rx;i<rx+rw;i++){
+    const k=(j*CW+i)*4; const h=rgb2hsv(d[k],d[k+1],d[k+2]);
+    if(h.s>=cal.sMin && h.v>=cal.vMin && h.v<=cal.vMax) calAcc[(h.h|0)%360]+=h.s;
+  }
+  if(performance.now()>=calAccUntil) finishCapture();
+}
+function finishCapture(){
+  const key=calAccKey; calAccKey=null;
+  let n=0; for(let k=0;k<360;k++)n+=calAcc[k];
+  if(n<20){ setFlash("Pas assez de couleur","rapprochez les cartes / +lumière","var(--orange)",1600);
+    $("#calReadTxt").textContent="Le masque montre en direct les pixels classés vert / bleu."; return; }
+  const sm=new Float32Array(360);
+  for(let k=0;k<360;k++){let s=0;for(let o=-6;o<=6;o++)s+=calAcc[(k+o+360)%360];sm[k]=s;}
+  let peak=0;for(let k=1;k<360;k++)if(sm[k]>sm[peak])peak=k;
+  cal[key].h=peak;
+  const hex=hsv2hex(peak,0.9,0.95);
+  if(key==="green"){ $("#swGreen").style.background=hex; $("#rdGreen").textContent="teinte "+peak+"°"; $("#rdGreen").className="ok"; greenDone=true; }
+  else { $("#swYellow").style.background=hex; $("#rdYellow").textContent="teinte "+peak+"°"; $("#rdYellow").className="ok"; yellowDone=true; }
+  $("#calReadTxt").textContent="Le masque montre en direct les pixels classés vert / bleu.";
+  // garde-fou : les deux teintes doivent être franchement distinctes
+  if(greenDone&&yellowDone&&hueDist(cal.green.h,cal.yellow.h)<40)
+    setFlash("Couleurs trop proches","plus de lumière, cartes plus hautes","var(--orange)",2200);
+  $("#calSave").disabled=!(greenDone&&yellowDone);
+}
+let greenDone=false, yellowDone=false;
+function hsv2hex(h,s,v){
+  const c=v*s, x=c*(1-Math.abs((h/60)%2-1)), m=v-c; let r,g,b;
+  if(h<60){r=c;g=x;b=0}else if(h<120){r=x;g=c;b=0}else if(h<180){r=0;g=c;b=x}
+  else if(h<240){r=0;g=x;b=c}else if(h<300){r=x;g=0;b=c}else{r=c;g=0;b=x}
+  const t=v=>("0"+Math.round((v+m)*255).toString(16)).slice(-2);
+  return "#"+t(r)+t(g)+t(b);
+}
+
+/* sauvegarde / restauration de la calibration du matin */
+function saveCal(){ try{ localStorage.setItem("pv_cal",JSON.stringify(
+  {g:cal.green.h,y:cal.yellow.h,sMin:cal.sMin,tol:cal.tol,roi:cal.roi})); }catch(e){} }
+function loadCal(){ try{ const c=JSON.parse(localStorage.getItem("pv_cal")||"null");
+  if(c){ cal.green.h=c.g;cal.yellow.h=c.y;cal.sMin=c.sMin;cal.tol=c.tol; if(c.roi)cal.roi=c.roi;
+    greenDone=yellowDone=true; return true; } }catch(e){} return false; }
+function refreshCalState(){ const el=$("#calState");
+  if(greenDone&&yellowDone){ el.textContent="Salle calibrée ✔ (vert "+cal.green.h+"° · bleu "+cal.yellow.h+"°) — réglage mémorisé."; el.className="calState ok"; }
+  else { el.textContent="Salle non calibrée — lancez le réglage du matin une fois sur place."; el.className="calState todo"; } }
+
+/* ---- caméra (+ micro, optionnel) ---- */
+async function tryGUM(c){ try{ return await navigator.mediaDevices.getUserMedia(c); }catch(e){ return null; } }
+async function startCam(){
+  camStream = await tryGUM({video:{facingMode:"environment",width:640,height:480}})
+           || await tryGUM({video:true});
+  if(!camStream){ camReady=false; return false; }
+  video.srcObject=camStream; calVideo.srcObject=camStream; camReady=true;
+  return true;
+}
+
+/* ---- ROI drag sur l'overlay de calibration ---- */
+function fitOverlay(){
+  const r=calVideo.getBoundingClientRect();
+  calOverlay.width=r.width; calOverlay.height=r.height;
+}
+function drawCal(){
+  fitOverlay();
+  const W=calOverlay.width,H=calOverlay.height;
+  calOctx.clearRect(0,0,W,H);
+  analyze(true); accumulate();
+  calOctx.save(); calOctx.globalAlpha=0.55;
+  calOctx.imageSmoothingEnabled=false;
+  calOctx.drawImage(maskCv,0,0,W,H); calOctx.restore();
+  const rx=cal.roi.x*W, ry=cal.roi.y*H, rw=cal.roi.w*W, rh=cal.roi.h*H;
+  calOctx.strokeStyle="#B6FF3C"; calOctx.lineWidth=2; calOctx.setLineDash([8,5]);
+  calOctx.strokeRect(rx,ry,rw,rh); calOctx.setLineDash([]);
+  calOctx.fillStyle="#B6FF3C"; calOctx.fillRect(rx+rw-12,ry+rh-12,12,12);
+  calOctx.fillStyle="rgba(0,0,0,.6)"; calOctx.fillRect(rx,ry-22,160,20);
+  calOctx.fillStyle="#E7ECEF"; calOctx.font="12px monospace";
+  calOctx.fillText("vert "+lastG+"  bleu "+lastY,rx+6,ry-8);
+}
+let drag=null;
+calOverlay.addEventListener("pointerdown",e=>{
+  const r=calOverlay.getBoundingClientRect();
+  const px=(e.clientX-r.left)/r.width, py=(e.clientY-r.top)/r.height;
+  const onHandle = px>cal.roi.x+cal.roi.w-0.06 && py>cal.roi.y+cal.roi.h-0.08;
+  drag={mode:onHandle?"resize":"move", px,py, roi:{...cal.roi}};
+  calOverlay.setPointerCapture(e.pointerId);
+});
+calOverlay.addEventListener("pointermove",e=>{
+  if(!drag)return;
+  const r=calOverlay.getBoundingClientRect();
+  const px=(e.clientX-r.left)/r.width, py=(e.clientY-r.top)/r.height;
+  const dx=px-drag.px, dy=py-drag.py;
+  if(drag.mode==="move"){
+    cal.roi.x=Math.min(1-cal.roi.w,Math.max(0,drag.roi.x+dx));
+    cal.roi.y=Math.min(1-cal.roi.h,Math.max(0,drag.roi.y+dy));
+  }else{
+    cal.roi.w=Math.min(1-cal.roi.x,Math.max(0.12,drag.roi.w+dx));
+    cal.roi.h=Math.min(1-cal.roi.y,Math.max(0.12,drag.roi.h+dy));
+  }
+});
+calOverlay.addEventListener("pointerup",()=>drag=null);
+
+/* ---- état ---- */
+let state="title", energy=0, health=3, maxHealth=3;
+let tide=0, light=1, acquired=false, acquireProg=0;
+let phase=null, phaseT=0, roundIdx=0, plan=[];
+let dangerResolved=false, dangerHitFx=0, bird={x:-1,y:0,active:false};
+let dangerKind="bird", bubbles=[], stDodge=0, stHit=0, stMaxG=0, dodgeStreak=0, bestStreak=0;
+let scoreL=0, scoreR=0;
+let photo=null, pStep=0, pScore=0, pIdx=0, pT=0, pLocked=false;
+let pheading="left", zEvalT=0, zScoreSum=0, zEvals=0, zFlip=0;
+/* marée */
+let mareeTarget="low", mareeNext=0, mareeGood=0;
+/* prédateur ciblé */
+let predSide="L", predResolved=false;
+/* acquisition (algue L/R) */
+let acqSide="L", acqAlgae={x:-60,y:0,active:false}, acqGood=0;
+/* blanchiment */
+let stress=0, bleachGood=0;
+/* vague verte */
+let waveSeg=0, waveNext=0, waveScore=0, waveSide="L";
+/* nuit */
+let nightGood=0;
+/* plante carnivore */
+let carnResolved=false, carnGood=0;
+/* ver de terre (mouvement) */
+let wormGood=0, wormFreezeAt=4.6;
+/* bonus sonore */
+let flickerCount=0, flickerState=null;
+
+const PHOTO_BANK=[
+  {q:"La chlorophylle capte la LUMIÈRE pour démarrer.",a:true,lvl:0,sp:"roscoff"},
+  {q:"L'algue casse des molécules d'EAU et libère de l'OXYGÈNE.",a:true,lvl:0,sp:"roscoff"},
+  {q:"Il faut l'OBSCURITÉ totale pour fabriquer le sucre.",a:false,lvl:0,sp:"roscoff"},
+  {q:"Le ver naît déjà vert, avec ses algues.",a:false,lvl:0,sp:"roscoff"},
+  {q:"L'algue vit à l'intérieur du ver, sous sa peau.",a:true,lvl:0,sp:"roscoff"},
+  {q:"Le ver donne à l'algue son CO\u2082 et ses déchets azotés.",a:true,lvl:1,sp:"roscoff"},
+  {q:"Le sucre nourrit le ver, qui n'a pas de vrai intestin.",a:true,lvl:1,sp:"roscoff"},
+  {q:"Sans son algue, le ver finit par mourir.",a:true,lvl:1,sp:"roscoff"},
+  {q:"Le ver nage vers la lumière grâce à des photorécepteurs.",a:true,lvl:1,sp:"roscoff"},
+  {q:"À marée basse, les vers s'enfoncent au fond pour fuir la lumière.",a:false,lvl:1,sp:"roscoff"},
+  {q:"Cette symbiose sert de modèle pour comprendre le blanchissement des coraux.",a:true,lvl:2,sp:"roscoff"},
+  {q:"L'algue partenaire s'appelle Tetraselmis convolutae.",a:true,lvl:2,sp:"roscoff"},
+  {q:"Le ver récupère ses algues dans l'eau de mer après l'éclosion.",a:true,lvl:2,sp:"roscoff"},
+  {q:"La plante carnivore fait quand même de la photosynthèse malgré ses pièges.",a:true,lvl:0,sp:"carnivore"},
+  {q:"La plante carnivore capture des insectes pour remplacer complètement la lumière du soleil.",a:false,lvl:1,sp:"carnivore"},
+  {q:"Les plantes carnivores poussent surtout dans des sols pauvres en azote.",a:true,lvl:2,sp:"carnivore"},
+  {q:"Le ver de terre fabrique lui aussi des sucres grâce au soleil, comme le ver de Roscoff.",a:false,lvl:0,sp:"earthworm"},
+  {q:"Le ver de terre se nourrit de matière organique en décomposition dans le sol.",a:true,lvl:0,sp:"earthworm"},
+  {q:"Le ver de terre vit en symbiose avec une algue, comme le ver de Roscoff.",a:false,lvl:1,sp:"earthworm"},
+  {q:"Un humain peut vivre uniquement grâce à la lumière du soleil, comme une plante.",a:false,lvl:0,sp:"human"},
+  {q:"Contrairement au ver de Roscoff, l'humain digère sa nourriture grâce à un système digestif complet.",a:true,lvl:0,sp:"human"},
+  {q:"Une plante ordinaire fabrique son sucre à partir du soleil, de l'eau et du CO₂.",a:true,lvl:0,sp:"plant"},
+  {q:"Toutes les plantes ont besoin de capturer des proies pour survivre.",a:false,lvl:1,sp:"plant"}
+];
+function selectPhotoQs(){
+  const max=PROFILE==="6e"?0:2;
+  const pool=PHOTO_BANK.filter(o=>o.lvl<=max);
+  const groups={};
+  pool.forEach(o=>{ const k=o.sp||"roscoff"; (groups[k]=groups[k]||[]).push(o); });
+  Object.values(groups).forEach(arr=>{
+    for(let i=arr.length-1;i>0;i--){const j=(Math.random()*(i+1))|0;const t=arr[i];arr[i]=arr[j];arr[j]=t;}
+  });
+  const keys=Object.keys(groups).sort(()=>Math.random()-.5);
+  const out=[]; let idx=0;
+  while(out.length<P().quizN){
+    let added=false;
+    for(const k of keys){ if(groups[k][idx]){ out.push(groups[k][idx]); added=true; if(out.length>=P().quizN)break; } }
+    if(!added) break; idx++;
+  }
+  return out;
+}
+const INFOS=[
+  {t:"Symbiose",x:"Le ver naît <b>pâle</b>. Il doit capturer la micro-algue <b>Tetraselmis convolutae</b> pour devenir vert et vivant.",img:"assets/photo-symbiose.jpg"},
+  {t:"Photosynthèse",x:"L'algue capte la lumière et fabrique des <b>sucres</b> dont le ver se nourrit. Plus de vert exposé = plus d'énergie."},
+  {t:"Pas d'intestin",x:"L'adulte n'a <b>pas de véritable intestin</b> : sa nourriture vient presque entièrement de la photosynthèse de ses algues."},
+  {t:"Marée",x:"À <b>marée basse</b>, les vers remontent par milliers dans un film d'eau pour capter un maximum de lumière.",img:"assets/photo-plage.jpg"},
+  {t:"Fuite",x:"Le ver ignore les petites vibrations, mais au-delà d'un <b>seuil</b>, il plonge aussitôt dans le sable. Cachez vos algues vite — montrez le bleu !"},
+  {t:"Oxygène",x:"En photosynthétisant, les algues libèrent de l'<b>oxygène</b> : la colonie respire grâce à ses partenaires."},
+  {t:"Modèle des coraux",x:"Cette photosymbiose sert de <b>modèle</b> pour comprendre celle des coraux, menacés par le <b>blanchissement</b>."},
+  {t:"Vagues sociales",x:"Par milliers, les vers s'agrègent et forment des <b>tapis verts</b> sur le sable, un comportement collectif auto-organisé.",img:"assets/photo-tapis.jpg"},
+  {t:"Donnant-donnant",x:"L'algue donne au ver des <b>sucres</b> ; le ver rend à l'algue son <b>CO₂</b> et ses déchets azotés, recyclés comme engrais — un recyclage d'autant plus actif qu'il y a de la lumière."},
+  {t:"Vers la lumière",x:"Le ver possède des <b>photorécepteurs</b> : il nage vers la lumière (phototaxie) pour bien placer ses algues. Mais face à un soleil trop fort, il se replie — le même excès qui provoque le blanchiment."},
+  {t:"Blanchiment",x:"Trop de lumière <b>stresse</b> les algues, comme un corail qui blanchit sous la chaleur. La bonne symbiose est un <b>équilibre</b>."},
+  {t:"Plante carnivore",x:"Une plante carnivore photosynthétise comme les autres, mais capture des insectes pour compléter ce que le sol pauvre ne lui donne pas, l'azote."},
+  {t:"Ver de terre",x:"Le ver de terre n'a ni algue ni photosynthèse : il se nourrit de matière organique en décomposition dans le sol."},
+  {t:"Nous, les humains",x:"Contrairement au ver de Roscoff, nous ne captons pas l'énergie du soleil : notre système digestif transforme la nourriture que nous mangeons."},
+  {t:"Une algue précise",x:"Ce n'est pas n'importe quelle algue verte : le ver ne s'associe qu'avec <b>Tetraselmis convolutae</b>. Chaque génération doit la retrouver seule dans le sable — rien n'est transmis par l'œuf."},
+  {t:"Une menace invisible",x:"Certains polluants (plastiques, pesticides) empêchent les jeunes vers de capturer leurs algues, et l'acidification de l'océan peut faire <b>blanchir</b> la symbiose — les mêmes menaces que pour les coraux."}
+];
+let infoQueue=[];
+function nextInfo(){if(infoQueue.length===0)infoQueue=[2,3,4,5,6,7,8,9,14].sort(()=>Math.random()-.5);return infoQueue.pop();}
+
+/* ---- scène ---- */
+let W=0,Hh=0,DPR=Math.min(2,window.devicePixelRatio||1),worms=[],earthworms=[],lastMotion=0;
+function resize(){const r=$("#stage").getBoundingClientRect();W=r.width;Hh=r.height;
+  scene.width=W*DPR;scene.height=Hh*DPR;scene.style.width=W+"px";scene.style.height=Hh+"px";
+  ctx.setTransform(DPR,0,0,DPR,0,0);buildWorms();buildEarthworms();}
+window.addEventListener("resize",resize);
+function buildWorms(){worms=[];const n=72,cols=12,top=Hh*0.46,bot=Hh*0.92;
+  for(let i=0;i<n;i++){const col=i%cols,row=Math.floor(i/cols);
+    worms.push({x:(W*0.10)+(W*0.80)*(col/(cols-1))+(Math.random()-.5)*22,
+      y:top+(bot-top)*(row/(Math.ceil(n/cols)-1))+(Math.random()-.5)*14,
+      ph:Math.random()*6.28,len:24+Math.random()*16,w:3+Math.random()*1.6,rise:0,seed:Math.random()*1000});}}
+function buildEarthworms(){earthworms=[];const n=3;
+  for(let i=0;i<n;i++){earthworms.push({x:W*0.16+W*0.3*i+Math.random()*30,y:Hh*0.28+Math.random()*(Hh*0.5),
+    len:100+Math.random()*46,ph:Math.random()*6.28,seed:Math.random()*1000});}}
+function lerp(a,b,t){return a+(b-a)*t}
+function drawRoscoffWorm(c,len,w,acquiredFlag,filterStr){
+  const img=acquiredFlag?IMG.wormAdult:IMG.wormJuvenile;
+  if(!img.complete||!img.naturalWidth) return;
+  const h=len*2.5, wpx=h*(img.naturalWidth/img.naturalHeight)*0.72;
+  if(filterStr){c.save();c.filter=filterStr;}
+  c.drawImage(img,-wpx/2,-h/2,wpx,h);
+  if(filterStr)c.restore();
+}
+function drawBird(c,x,y,t){
+  drawImgCentered(c,IMG.bird,x,y,58,0);
+}
+function drawInsect(c,x,y,t){
+  const flap=Math.sin(t*30)*0.25;
+  drawImgCentered(c,IMG.algae,x,y,24,flap);
+}
+function drawCarnivorePlant(c,cx,groundY,openness,t,scale){
+  scale=scale||1;
+  const sway=Math.sin(t*1.1+cx)*3*scale;
+  const imgOpen=IMG.plant, imgClosed=IMG.plantClosed;
+  if(!imgOpen.complete||!imgOpen.naturalWidth||!imgClosed.complete||!imgClosed.naturalWidth) return;
+  const h=190*scale, wpx=h*(imgOpen.naturalWidth/imgOpen.naturalHeight);
+  const open=Math.max(0,Math.min(1,openness));
+  c.save();
+  c.translate(cx+sway,groundY-h*0.52);
+  c.globalAlpha=1-open;c.drawImage(imgClosed,-wpx/2,-h/2,wpx,h);
+  c.globalAlpha=open;c.drawImage(imgOpen,-wpx/2,-h/2,wpx,h);
+  c.restore();
+}
+const drawPhotons = (() => {
+  const MAX = 80; const pool = [];
+  function spawn(p, W, H, scatterY) {
+    p.x = Math.random() * W; p.y = scatterY ? Math.random() * H * 0.46 : -4 - Math.random() * 20;
+    p.vy = 28 + Math.random() * 55; p.vx = (Math.random() - 0.5) * 10;
+    p.r = 0.8 + Math.random() * 1.6; p.phase = Math.random() * Math.PI * 2; p.twinkle = 2 + Math.random() * 4;
+  }
+  function color(k, alpha) {
+    const r = (255 + (61 - 255) * k) | 0; const g = (122 + (255 - 122) * k) | 0; const b = (24 + (140 - 24) * k) | 0;
+    return "rgba("+r+","+g+","+b+","+alpha+")";
+  }
+  return function drawPhotons(ctx, W, H, t, dt) {
+    const horizon = H * 0.46;
+    if (pool.length === 0) { for (let i = 0; i < MAX; i++) { const p = {}; spawn(p, W, H, true); pool.push(p); } }
+    const step = Math.min(dt, 0.05);
+    ctx.save(); ctx.globalCompositeOperation = 'lighter';
+    for (let i = 0; i < MAX; i++) {
+      const p = pool[i]; p.y += p.vy * step; p.x += p.vx * step;
+      if (p.y >= horizon || p.x < -6 || p.x > W + 6) { spawn(p, W, H, false); continue; }
+      const k = Math.min(p.y / horizon, 1);
+      const tw = 0.65 + 0.35 * Math.sin(t * p.twinkle + p.phase);
+      const fade = k > 0.85 ? (1 - k) / 0.15 : 1; const a = tw * fade;
+      ctx.fillStyle = color(k, a * 0.18); ctx.beginPath(); ctx.arc(p.x, p.y, p.r * 3.2, 0, 6.2832); ctx.fill();
+      ctx.fillStyle = color(k, a); ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 6.2832); ctx.fill();
+    }
+    ctx.restore();
+  };
+})();
+function isLightPhase(p){return p==="sun"||p==="acquire"||p==="final"||p==="maree"||p==="bleach"||p==="greenwave"||p==="phototaxie"||p==="photo"||p==="carnivore"||p==="cheer";}
+function drawSoilScene(t,dt){
+  let soil=ctx.createLinearGradient(0,0,0,Hh);
+  soil.addColorStop(0,"#4a3420");soil.addColorStop(0.35,"#2e2013");soil.addColorStop(1,"#170f09");
+  ctx.fillStyle=soil;ctx.fillRect(0,0,W,Hh);
+  ctx.strokeStyle="rgba(120,90,60,.3)";ctx.lineWidth=2;
+  for(let i=0;i<6;i++){
+    const rx=W*(0.06+i*0.17);
+    ctx.beginPath();ctx.moveTo(rx,0);
+    ctx.quadraticCurveTo(rx+Math.sin(i*2)*22,Hh*0.28,rx+Math.sin(i*2)*12,Hh*0.5);ctx.stroke();
+  }
+  ctx.fillStyle="rgba(80,60,42,.45)";
+  for(let i=0;i<14;i++){
+    const px=(i*83+30)%W, py=(i*61+70)%Hh;
+    ctx.beginPath();ctx.arc(px,py,3+((i*7)%5),0,6.28);ctx.fill();
+  }
+  const amp=lastMotion, calm=lastMotion<0.15;
+  ctx.save();
+  for(const ew of earthworms){
+    const jx=Math.sin(t*40+ew.ph)*amp*14, jy=Math.cos(t*37+ew.ph)*amp*8;
+    const rot=Math.sin(t*26+ew.ph)*amp*0.4;
+    if(calm){ctx.shadowColor="rgba(97,255,170,.6)";ctx.shadowBlur=22;}else{ctx.shadowBlur=0;}
+    drawImgCentered(ctx,IMG.earthworm,ew.x+ew.len*0.5+jx,ew.y+jy,ew.len*0.95,rot);
+  }
+  ctx.shadowBlur=0;
+  ctx.restore();
+  if(dangerHitFx>0){ctx.fillStyle="rgba(255,122,24,"+(dangerHitFx*0.35)+")";ctx.fillRect(0,0,W,Hh);dangerHitFx-=0.04;}
+}
+function drawForestScene(t,dt){
+  let sky=ctx.createLinearGradient(0,0,0,Hh*0.55);
+  sky.addColorStop(0,"#0c2015");sky.addColorStop(1,"#16311e");
+  ctx.fillStyle=sky;ctx.fillRect(0,0,W,Hh*0.55);
+  let floor=ctx.createLinearGradient(0,Hh*0.55,0,Hh);
+  floor.addColorStop(0,"#24190f");floor.addColorStop(1,"#130d08");
+  ctx.fillStyle=floor;ctx.fillRect(0,Hh*0.55,W,Hh*0.45);
+  ctx.fillStyle="rgba(10,16,10,.85)";
+  [0.04,0.16,0.88,0.97].forEach((f,i)=>{const tw=16+(i%2)*10;ctx.fillRect(W*f-tw/2,0,tw,Hh*0.85);});
+  ctx.save();ctx.globalAlpha=0.35;drawPhotons(ctx,W,Hh*0.6,t,dt);ctx.restore();
+  const gY=Hh*0.88;
+  drawCarnivorePlant(ctx,W*0.5,gY,G,t,1.3);
+  drawCarnivorePlant(ctx,W*0.26,gY-6,G,t+0.6,0.8);
+  drawCarnivorePlant(ctx,W*0.74,gY-6,G,t+1.2,0.8);
+  if(bird.active)drawInsect(ctx,bird.x,bird.y,t);
+}
+function drawScene(t,dt=0.016){
+  ctx.clearRect(0,0,W,Hh);
+  if(state==="play"&&phase==="earthworm"){drawSoilScene(t,dt);return;}
+  if(state==="play"&&phase==="carnivore"){drawForestScene(t,dt);return;}
+  const horiz=Hh*0.46, day=light;
+  let sky=ctx.createLinearGradient(0,0,0,horiz);
+  sky.addColorStop(0,"rgba("+(8+day*20|0)+","+(22+day*40|0)+","+(18+day*26|0)+",1)");
+  sky.addColorStop(1,"rgba("+(10+day*30|0)+","+(40+day*60|0)+","+(40+day*40|0)+",1)");
+  ctx.fillStyle=sky;ctx.fillRect(0,0,W,horiz);
+  const isMareeNight=state==="play"&&phase==="maree"&&mareeTarget==="night";
+  const sunY=lerp(horiz*0.9,horiz*0.18,isMareeNight?0.82:day),sunX=W*0.5,sunR=Math.max(20,Hh*0.05);
+  if(isMareeNight){
+    let mg=ctx.createRadialGradient(sunX,sunY,2,sunX,sunY,sunR*2.4);
+    mg.addColorStop(0,"rgba(200,212,232,.5)");mg.addColorStop(1,"rgba(200,212,232,0)");
+    ctx.fillStyle=mg;ctx.beginPath();ctx.arc(sunX,sunY,sunR*2.4,0,6.28);ctx.fill();
+    ctx.fillStyle="rgba(226,231,242,.95)";ctx.beginPath();ctx.arc(sunX,sunY,sunR*0.85,0,6.28);ctx.fill();
+    ctx.fillStyle="rgba(176,186,204,.55)";
+    ctx.beginPath();ctx.arc(sunX-sunR*0.26,sunY-sunR*0.16,sunR*0.16,0,6.28);ctx.fill();
+    ctx.beginPath();ctx.arc(sunX+sunR*0.2,sunY+sunR*0.26,sunR*0.12,0,6.28);ctx.fill();
+    ctx.beginPath();ctx.arc(sunX+sunR*0.05,sunY-sunR*0.32,sunR*0.09,0,6.28);ctx.fill();
+  }else{
+    let sg=ctx.createRadialGradient(sunX,sunY,2,sunX,sunY,sunR*3);
+    sg.addColorStop(0,"rgba(255,180,90,"+(.5+.4*day)+")");sg.addColorStop(1,"rgba(255,122,24,0)");
+    ctx.fillStyle=sg;ctx.beginPath();ctx.arc(sunX,sunY,sunR*3,0,6.28);ctx.fill();
+    ctx.fillStyle="rgba(255,"+(150+day*60|0)+",60,"+(.6+.35*day)+")";ctx.beginPath();ctx.arc(sunX,sunY,sunR,0,6.28);ctx.fill();
+    if(day>0.12){
+      ctx.save();ctx.globalAlpha=Math.min(1,(day-0.1)*1.3);
+      ctx.strokeStyle="rgba(255,214,120,.95)";ctx.lineWidth=3;ctx.lineCap="round";
+      const rayLen=sunR*(1.5+0.4*Math.sin(t*0.6));
+      for(let i=0;i<10;i++){
+        const ang=(i/10)*6.2832+t*0.15;
+        const x1=sunX+Math.cos(ang)*sunR*1.3, y1=sunY+Math.sin(ang)*sunR*1.3;
+        const x2=sunX+Math.cos(ang)*(sunR*1.3+rayLen), y2=sunY+Math.sin(ang)*(sunR*1.3+rayLen);
+        ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+      }
+      ctx.restore();
+    }
+  }
+  if(state==="play"&&isLightPhase(phase)){
+    ctx.save();ctx.globalAlpha=Math.min(1,0.3+day*0.7);drawPhotons(ctx,W,Hh,t,dt);ctx.restore();
+  }
+  let sand=ctx.createLinearGradient(0,horiz,0,Hh);sand.addColorStop(0,"#2a2118");sand.addColorStop(1,"#150f0a");
+  ctx.fillStyle=sand;ctx.fillRect(0,horiz,W,Hh-horiz);
+  const waterY=horiz+(Hh-horiz)*(0.14+0.62*tide);
+  let wf=ctx.createLinearGradient(0,horiz,0,waterY+18);
+  wf.addColorStop(0,"rgba(54,224,255,"+(0.10+tide*0.30)+")");
+  wf.addColorStop(1,"rgba(54,224,255,"+(0.05+tide*0.14)+")");
+  ctx.fillStyle=wf;ctx.fillRect(0,horiz,W,waterY-horiz);
+  ctx.strokeStyle="rgba(160,240,255,"+(0.5+tide*0.4)+")";ctx.lineWidth=2.5;ctx.beginPath();
+  for(let x=0;x<=W;x+=10)ctx.lineTo(x,waterY+Math.sin(x*0.03+t*2)*3);ctx.stroke();
+  const exposing=isLightPhase(phase)&&phase!=="photo";
+  const targetRise=exposing?G:(phase==="danger"&&dangerResolved?0.05:G*0.4);
+  const bleachMix=Math.min(1,stress*0.9);
+  for(const wm of worms){
+    wm.rise=lerp(wm.rise,targetRise,0.12);
+    const wig=Math.sin(t*2+wm.ph)*2.2*(0.4+wm.rise),yy=wm.y-wm.rise*16;
+    const tv=acquired?Math.min(1,G*1.15):acquireProg;
+    let sat=acquired?(0.12+0.88*tv):(0.35+0.5*tv), bri=acquired?(1.32-0.32*tv):(0.82+0.25*tv);
+    if(phase==="bleach"&&bleachMix>0){sat=Math.max(0.05,sat*(1-bleachMix*0.8));bri+=bleachMix*0.5;}
+    const wfilter="saturate("+sat.toFixed(2)+") brightness("+bri.toFixed(2)+")";
+    ctx.save();ctx.translate(wm.x+wig,yy);ctx.rotate(Math.sin(t*1.5+wm.seed)*0.12);
+    if(acquired&&G>0.5&&exposing&&bleachMix<0.4){ctx.shadowColor="rgba(61,255,140,"+((G-0.5)*1.2)+")";ctx.shadowBlur=14;}
+    drawRoscoffWorm(ctx,wm.len,wm.w,acquired,wfilter);ctx.restore();
+  }
+  if(state==="play"&&acquired&&exposing&&G>0.25&&Math.random()<G*0.35){
+    const wm=worms[(Math.random()*worms.length)|0];
+    bubbles.push({x:wm.x+(Math.random()-.5)*8,y:wm.y-10,r:1.2+Math.random()*2.4,v:16+Math.random()*26,a:.85,o2:Math.random()<0.15});
+  }
+  for(let i=bubbles.length-1;i>=0;i--){
+    const b=bubbles[i];b.y-=b.v*dt;b.x+=Math.sin(t*3+b.y*0.05)*0.4;b.a-=dt*0.35;
+    if(b.a<=0||b.y<horiz*0.9){bubbles.splice(i,1);continue;}
+    ctx.strokeStyle="rgba(160,240,255,"+b.a+")";ctx.lineWidth=1;
+    ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,6.28);ctx.stroke();
+    if(b.o2){ctx.fillStyle="rgba(160,240,255,"+b.a+")";ctx.font="9px monospace";ctx.fillText("O₂",b.x+4,b.y-3);}
+  }
+  if(bubbles.length>140)bubbles.splice(0,bubbles.length-140);
+  // zones lumineuses (phototaxie / vague verte)
+  if((phase==="phototaxie"||phase==="greenwave")&&state==="play"){
+    const left=(phase==="greenwave")?(waveSide==="L"):(pheading==="left"), cx=left?W*0.26:W*0.74;
+    ctx.fillStyle="rgba(2,6,4,.5)";
+    if(left)ctx.fillRect(W/2,0,W/2,Hh); else ctx.fillRect(0,0,W/2,Hh);
+    let lg=ctx.createRadialGradient(cx,horiz*0.55,10,cx,horiz*0.55,W*0.42);
+    lg.addColorStop(0,"rgba(255,200,90,.38)");lg.addColorStop(1,"rgba(255,200,90,0)");
+    ctx.fillStyle=lg;ctx.fillRect(0,0,W,Hh);
+    ctx.strokeStyle="rgba(61,255,140,.5)";ctx.setLineDash([6,6]);ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(W/2,horiz);ctx.lineTo(W/2,Hh);ctx.stroke();ctx.setLineDash([]);
+  }
+  // acquisition : algue qui approche d'un côté
+  if(phase==="acquire"&&acqAlgae.active&&state==="play"){
+    ctx.save();ctx.shadowColor="rgba(97,255,170,.75)";ctx.shadowBlur=20;
+    drawImgCentered(ctx,IMG.algae,acqAlgae.x,acqAlgae.y,64,Math.sin(t*3)*0.15);
+    ctx.restore();
+  }
+  // prédateur ciblé : halo côté menacé
+  if(phase==="predator"&&state==="play"){
+    const cx=predSide==="L"?W*0.25:W*0.75;
+    let pg=ctx.createRadialGradient(cx,Hh*0.5,10,cx,Hh*0.5,W*0.4);
+    pg.addColorStop(0,"rgba(255,122,24,.18)");pg.addColorStop(1,"rgba(255,122,24,0)");
+    ctx.fillStyle=pg;ctx.fillRect(0,0,W,Hh);
+  }
+  if(bird.active)drawBird(ctx,bird.x,bird.y,t);
+  if((phase==="danger")&&dangerKind==="wave"&&state==="play"){
+    const d=P(),prog=Math.min(1,phaseT/d.warn); const wx=lerp(-W*0.25,W*0.62,prog);
+    ctx.save();
+    let wg=ctx.createLinearGradient(wx-90,0,wx+40,0);
+    wg.addColorStop(0,"rgba(54,224,255,0)");wg.addColorStop(.8,"rgba(54,224,255,.30)");wg.addColorStop(1,"rgba(255,122,24,.45)");
+    ctx.fillStyle=wg;ctx.fillRect(wx-90,horiz,130,Hh-horiz);
+    ctx.strokeStyle="rgba(255,122,24,.9)";ctx.lineWidth=3;ctx.shadowColor="rgba(255,122,24,.7)";ctx.shadowBlur=16;
+    ctx.beginPath();for(let yv=horiz;yv<=Hh;yv+=8)ctx.lineTo(wx+40+Math.sin(yv*0.06+t*8)*7,yv);ctx.stroke();
+    ctx.restore();
+  }
+  // voile de blanchiment (chaleur/lumière excessive)
+  if(phase==="bleach"&&bleachMix>0.05){ctx.fillStyle="rgba(255,245,220,"+(bleachMix*0.22)+")";ctx.fillRect(0,0,W,Hh);}
+  // nuit
+  if(phase==="night"){ctx.fillStyle="rgba(2,6,16,"+(0.45)+")";ctx.fillRect(0,0,W,Hh);}
+  if(dangerHitFx>0){ctx.fillStyle="rgba(255,122,24,"+(dangerHitFx*0.35)+")";ctx.fillRect(0,0,W,Hh);dangerHitFx-=0.04;}
+}
+function roundCap(c,x,y,w,h){c.beginPath();c.moveTo(x-w/2,y+w/2);c.lineTo(x-w/2,y+h-w/2);
+  c.arc(x,y+h-w/2,w/2,Math.PI,0,true);c.lineTo(x+w/2,y+w/2);c.arc(x,y+w/2,w/2,0,Math.PI,true);c.fill();}
+
+/* ---- légende contextuelle ---- */
+const LEGEND={
+  acquire:["mon côté : j'attire (vert)","l'autre côté : peu importe"], sun:["algues au soleil","restez à l'ombre"],
+  maree:["au soleil (marée basse)","à l'abri (marée haute)"], danger:["EXPOSÉ = danger","CACHÉ = à l'abri"],
+  predator:["produire (loin du danger)","se cacher (côté visé)"], bleach:["assez de vert","trop de vert = stress"],
+  phototaxie:["du côté éclairé","du côté sombre"], greenwave:["c'est mon tour","j'attends mon tour"],
+  photo:["je réponds VRAI","je réponds FAUX"], night:["—","repos, tout en bleu"], final:["tout au soleil","caché"],
+  carnivore:["j'attire (vert)","je referme le piège (bleu)"], earthworm:["—","on ne bouge plus"],
+  cheer:["vert","bleu — on alterne vite !"]
+};
+function setLegend(k){const L=LEGEND[k]||["algues exposées","algues cachées"];
+  $("#pvLgG").textContent=L[0];$("#pvLgY").textContent=L[1];$("#pvLegend").classList.add("show");}
+
+/* ---- plan & phases ---- */
+function buildPlan(){const p=P();plan=[{k:"acquire",dur:p.acquireDur}];
+  for(let i=0;i<p.rounds;i++){
+    plan.push({k:"sun",dur:p.sunDur,info:true});
+    plan.push({k:"maree",dur:p.mareeDur});
+    if(p.predator && i%2===1) plan.push({k:"predator",dur:p.warn+2.4});
+    else plan.push({k:"danger",dur:p.warn+1.8});
+  }
+  plan.push({k:"bleach",dur:p.bleachDur});
+  plan.push({k:"phototaxie",dur:15});
+  plan.push({k:"carnivore",dur:p.carnivoreDur});
+  plan.push({k:"earthworm",dur:p.earthwormDur});
+  plan.push({k:"photo",dur:p.quizN*p.quizT+3});
+  plan.push({k:"cheer",dur:p.cheerDur});
+  plan.push({k:"final",dur:p.finalDur});roundIdx=0;}
+
+function hideOverlays(){
+  $("#photoOverlay").classList.remove("show");$("#zoneBanner").classList.remove("show");
+  $("#zoneMeters").classList.remove("show");$("#callBanner").classList.remove("show");
+  $("#bleachWrap").style.display="none";$("#gband").style.display="none";
+}
+function setPhase(k){phase=k;phaseT=0;dangerResolved=false;bird.active=false;const pn=$("#phaseName");
+  $("#info").classList.toggle("left",k==="carnivore"||k==="earthworm");
+  $("#info").classList.toggle("top",k==="carnivore");
+  updateCamSplit(LR_PHASES.has(k));
+  hideOverlays(); setLegend(k);
+  const p=P(), manche=Math.min(p.rounds,Math.max(1,Math.ceil(roundIdx/2)));
+  $("#roundTxt").textContent=(k==="acquire")?"—":(k==="final")?"FIN":(k==="photo")?"QUIZ":(k==="phototaxie")?"LUM":(k==="greenwave")?"OLA":(k==="bleach")?"CHAUD":(k==="night")?"NUIT":(k==="maree")?"MARÉE":(k==="predator")?"CHASSE":(k==="carnivore")?"PIÈGE":(k==="earthworm")?"GEL":(k==="cheer")?"AGIT":manche+"/"+p.rounds;
+  if(k==="acquire"){pn.classList.remove("danger");acquired=false;acquireProg=0;acqGood=0;
+    acqSide=Math.random()<0.5?"L":"R";acqAlgae={x:acqSide==="L"?-60:W+60,y:Hh*0.5,active:true};
+    $("#phBig").textContent="ACQUISITION";$("#phSub").textContent="attirez votre algue — vert du bon côté !";
+    $("#callBanner").classList.add("show");$("#cbTxt").style.color="var(--green)";
+    $("#cbTxt").textContent=acqSide==="L"?"◀ L'ALGUE ARRIVE":"L'ALGUE ARRIVE ▶";
+    $("#cbSub").textContent=(acqSide==="L"?"GROUPE 1":"GROUPE 2")+" : montrez le VERT pour l'attirer";
+    setFlash("UNE ALGUE ARRIVE","attirez-la avec le vert !","var(--green)",2200);showInfo(0);
+    showChapter("COMMENT ÇA MARCHE","Une algue arrive d'un côté. Le groupe de ce côté montre le <b>VERT</b> pour l'attirer — l'autre groupe n'a pas d'importance ici.",4200);}
+  if(k==="sun"){pn.classList.remove("danger");$("#phBig").textContent="PHOTOSYNTHÈSE";$("#phSub").textContent="exposez vos algues au soleil";setFlash("SOLEIL","face verte !","var(--green)",1400);sfx("sun");}
+  if(k==="maree"){pn.classList.remove("danger");$("#phBig").textContent="LA MARÉE";$("#phSub").textContent="suivez le rythme de la mer";
+    mareeTarget="low";mareeNext=P().mareeInt;mareeGood=0;$("#callBanner").classList.add("show");setMareeBanner();setFlash("LA MARÉE","au rythme de la mer","var(--cyan)",1600);sfx("sun");
+    showChapter("LE RYTHME DE LA MARÉE","Le signal va changer plusieurs fois : suivez la bannière — <b>VERT</b> à marée basse (au soleil), <b>BLEU</b> à marée haute ou la nuit (à l'abri).",3000);}
+  if(k==="danger"){pn.classList.add("danger");tide=0.08;$("#phBig").textContent="DANGER";$("#phSub").textContent="cachez-vous — montrez le bleu !";
+    dangerKind=Math.random()<0.5?"bird":"wave"; bird={x:W+60,y:Hh*0.22,active:dangerKind==="bird"};
+    setFlash(dangerKind==="bird"?"PRÉDATEUR !":"VAGUE !","face bleue, vite !","var(--orange)",900);sfx("danger");}
+  if(k==="predator"){pn.classList.add("danger");tide=0.08;predSide=Math.random()<0.5?"L":"R";predResolved=false;
+    bird={x:predSide==="L"?-60:W+60,y:Hh*0.2,active:true};
+    $("#phBig").textContent="CHASSE CIBLÉE";$("#phSub").textContent=(predSide==="L"?"GROUPE 1":"GROUPE 2")+" se cache, l'autre produit";
+    $("#callBanner").classList.add("show");$("#cbTxt").style.color="var(--orange)";
+    $("#cbTxt").textContent=predSide==="L"?"◀ DANGER : GROUPE 1":"DANGER : GROUPE 2 ▶";
+    $("#cbSub").textContent="côté visé : BLEU · autre côté : VERT";
+    setFlash("UN OISEAU FONCE","un seul côté se cache !","var(--orange)",1400);sfx("danger");}
+  if(k==="bleach"){pn.classList.remove("danger");stress=0;bleachGood=0;
+    $("#phBig").textContent="TROP DE SOLEIL";$("#phSub").textContent="trouvez le bon équilibre de vert";
+    $("#bleachWrap").style.display="block";$("#gband").style.display="block";
+    $("#gband").style.bottom="45%";$("#gband").style.height="35%";
+    sweep("rgba(34,85,221,.7)");setFlash("ATTENTION CHALEUR","ni trop peu, ni trop de vert","var(--yellow)",2200);showInfo(10);
+    showChapter("TROUVER L'ÉQUILIBRE","Ici, pas de tout <b>VERT</b> ni de tout <b>BLEU</b> : trop de lumière stresse les algues. Gardez un mélange — ni trop peu, ni trop de vert.",4200);}
+  if(k==="phototaxie"){sweep("rgba(54,224,255,.8)");pn.classList.remove("danger");$("#phBig").textContent="PHOTOTAXIE";$("#phSub").textContent="suivez la lumière — un côté vert, un côté bleu";
+    pheading=Math.random()<0.5?"left":"right";zEvalT=0;zScoreSum=0;zEvals=0;zFlip=0;
+    $("#zoneBanner").classList.add("show");$("#zoneMeters").classList.add("show");setZoneBanner();
+    setFlash("SÉPAREZ-VOUS","la lumière se déplace !","var(--green)",2000);sfx("sun");
+    showChapter("PHOTOTAXIE","La lumière n'éclaire qu'un côté à la fois. Ce côté montre le <b>VERT</b>, l'autre le <b>BLEU</b> — et ça va changer de côté en cours de route !",4200);}
+  if(k==="greenwave"){sweep("rgba(61,255,140,.85)");pn.classList.remove("danger");$("#phBig").textContent="LA VAGUE VERTE";$("#phSub").textContent="faites voyager le vert d'un bout à l'autre";
+    waveSeg=0;waveSide="L";waveNext=3.2;waveScore=0;$("#zoneMeters").classList.add("show");
+    $("#zmLlbl").textContent="Groupe 1";$("#zmRlbl").textContent="Groupe 2";
+    setFlash("LA VAGUE VERTE","comme une ola de stade !","var(--green)",2000);sfx("sun");}
+  if(k==="night"){pn.classList.remove("danger");nightGood=0;$("#phBig").textContent="LA NUIT";$("#phSub").textContent="pas de soleil — reposez-vous, tout en bleu";
+    setFlash("LA NUIT TOMBE","tout le monde au bleu","var(--cyan)",2000);}
+  if(k==="final"){pn.classList.remove("danger");$("#phBig").textContent="GRANDE MARÉE";$("#phSub").textContent="effort maximal — tout au vert";setFlash("GRANDE MARÉE","tout le monde au vert !","var(--green)",2200);sfx("sun");showInfo(15);}
+  if(k==="photo"){sweep("rgba(61,255,140,.85)");pn.classList.remove("danger");$("#phBig").textContent="USINE À SUCRES";$("#phSub").textContent="votez vert (vrai) ou bleu (faux)";
+    photo=selectPhotoQs();pIdx=0;pScore=0;pStep=0;pLocked=false;
+    document.querySelectorAll(".pstage").forEach(s=>s.classList.remove("on"));
+    $("#pEff").textContent="";$("#pTimer").style.visibility="visible";$("#photoOverlay").classList.add("show");loadPhotoQ();
+    showChapter("LE QUIZ","Une affirmation apparaît. Montrez <b>VERT</b> si vous êtes d'accord (vrai), <b>BLEU</b> si vous n'êtes pas d'accord (faux). Prenez le temps de lire avant de répondre.",4500);
+    setFlash("QUIZ","convertissons la lumière !","var(--green)",1800);sfx("acquired");}
+  if(k==="carnivore"){pn.classList.remove("danger");carnResolved=false;carnGood=0;
+    bird={x:W+60,y:Hh*0.3,active:true};
+    $("#phBig").textContent="LA PLANTE CARNIVORE";$("#phSub").textContent="vert pour attirer l'insecte, bleu pour refermer le piège au bon moment";
+    showChapter("AUTRES STRATÉGIES","Le ver de Roscoff n'est pas seul à se débrouiller sans vraiment « manger ». La plante carnivore, elle, capte déjà la lumière comme n'importe quelle plante — mais chasse pour l'<b>azote</b> qui manque dans son sol.",4200);
+    setFlash("PLANTE CARNIVORE","attirez… puis refermez !","var(--green)",2000);sfx("sun");showInfo(11);}
+  if(k==="earthworm"){pn.classList.remove("danger");wormGood=0;prevFrame=null;
+    $("#phBig").textContent="LE VER DE TERRE";$("#phSub").textContent="ici la couleur ne compte pas — au signal, plus personne ne bouge !";
+    showChapter("RUPTURE TOTALE","Cette fois, pas de lumière, pas d'algue, pas de photosynthèse : le ver de terre vit uniquement de matière organique en décomposition. Ici, montrer le vert ne sert à rien.",4200);
+    setFlash("VER DE TERRE","attendez le signal, puis freeze !","var(--cyan)",2200);showInfo(12);}
+  if(k==="cheer"){pn.classList.remove("danger");flickerCount=0;flickerState=null;
+    $("#phBig").textContent="L'OVATION";$("#phSub").textContent="alternez vert et bleu le plus vite possible !";
+    setFlash("TOUS ENSEMBLE","vert-bleu-vert-bleu, vite !","var(--magenta)",1800);sfx("acquired");
+    showChapter("L'OVATION","Alternez <b>VERT</b> et <b>BLEU</b> le plus vite possible, tous ensemble — c'est notre façon d'applaudir sans faire de bruit !",3000);}
+}
+
+function setMareeBanner(){
+  if(mareeTarget==="night"){
+    $("#cbTxt").style.color="var(--cyan)";$("#cbTxt").textContent="LA NUIT TOMBE";
+    $("#cbSub").textContent="pas de lumière — montrez le BLEU";return;
+  }
+  const low=mareeTarget==="low";
+  $("#cbTxt").style.color=low?"var(--green)":"var(--yellow)";
+  $("#cbTxt").textContent=low?"MARÉE BASSE · AU SOLEIL":"MARÉE HAUTE · À L'ABRI";
+  $("#cbSub").textContent=low?"montrez le VERT":"montrez le BLEU";}
+function setZoneBanner(){const left=pheading==="left";
+  $("#zbTxt").innerHTML=left?"◀ LUMIÈRE : GROUPE 1":"LUMIÈRE : GROUPE 2 ▶";
+  $("#zmLlbl").textContent=left?"Groupe 1 · au VERT":"Groupe 1 · au BLEU";
+  $("#zmRlbl").textContent=left?"Groupe 2 · au BLEU":"Groupe 2 · au VERT";}
+function loadPhotoQ(){const o=photo[pIdx];if(!o){return;}
+  pT=0;pLocked=false;$("#pQ").textContent=o.q;
+  $("#pHint").innerHTML='<span class="vg">VERT = vrai</span> &nbsp;·&nbsp; <span class="vy">BLEU = faux</span>';
+  $("#pVote").textContent="";}
+function nextPhase(){roundIdx++;if(roundIdx>=plan.length){endGame(energy>=P().winAt);return;}setPhase(plan[roundIdx].k);}
+
+/* ---- boucle principale ---- */
+let last=0, sig={G:0,gL:0,yL:0,gR:0,yR:0,live:false};
+function loop(ts){
+  try{ loopBody(ts); }
+  catch(e){ console.error("loop() : erreur ignorée pour ne pas geler le jeu",e); }
+  requestAnimationFrame(loop);
+}
+function loopBody(ts){
+  const t=ts/1000,dt=Math.min(0.05,(ts-last)/1000||0);last=ts;
+  if(state==="cal"){ drawCal(); return; }
+  if(state==="awaken"){ awakenTick(t,dt); updateCamHud(); drawScene(t,dt); updateMascot(); return; }
+
+  sig=readSignal();
+  let R = sig.G;
+  if(R==null) R=lastR; else lastR=R;
+  G=lerp(G,R,0.18);
+
+  if(state==="play"){
+    phaseT+=dt;const p=P(); stMaxG=Math.max(stMaxG,G);
+    const tideTau=phase==="maree"?Math.max(0.8,p.mareeInt*0.45):2.5;
+    const tideGoal=phase==="maree"?(mareeTarget==="low"?0.08:0.92):0.22;
+    tide=lerp(tide,tideGoal,Math.min(1,dt/tideTau));
+    light=(1-tide*0.55)*p.light; if(phase==="danger"||phase==="predator")light*=0.6; if(phase==="night")light*=0.25;
+    updateAmbience();
+    $("#tideTxt").textContent=tide<0.4?"BASSE":tide>0.6?"HAUTE":"MONTANTE";
+    $("#tideSub").textContent=tide<0.4?"lumière max":"peu de lumière";
+    const cur=plan[roundIdx];
+    // accumulation compétition (terminale)
+    if(p.compete&&isLightPhase(phase)&&phase!=="photo"&&acquired){scoreL+=sig.gL*dt;scoreR+=sig.gR*dt;
+      $("#scoreLtxt").textContent=Math.round(scoreL);$("#scoreRtxt").textContent=Math.round(scoreR);}
+
+    if(phase==="acquire"){
+      const prog=Math.min(1,phaseT/cur.dur);acquireProg=prog;
+      const startX=acqSide==="L"?-60:W+60;
+      acqAlgae.x=lerp(startX,W*0.5,prog);acqAlgae.y=Hh*0.3+Math.sin(t*3)*8;
+      const corr=acqSide==="L"?sig.gL:sig.gR;
+      if(prog>0.12&&prog<0.92&&corr>0.55)acqGood+=dt;
+      if(phaseT>cur.dur){
+        acqAlgae.active=false;acquired=true;acquireProg=1;
+        const rate=acqGood/(cur.dur*0.55),success=rate>0.4,bonus=success?18:8;
+        energy=Math.min(100,energy+bonus);
+        setFlash(success?"ALGUE CAPTURÉE !":"DE JUSTESSE","la colonie devient adulte (+"+bonus+")","var(--green)",2200);
+        sfx("acquired");showTransform();nextPhase();
+      }
+    }else if(phase==="sun"){
+      if(acquired){energy=Math.min(100,energy+G*light*16*dt);
+        if(cur.info&&phaseT>cur.dur*0.45){cur.info=false;showInfo(nextInfo());}}
+      if(phaseT>cur.dur)nextPhase();
+    }else if(phase==="maree"){
+      if(phaseT>mareeNext){const seq=["low","high","night"];
+        mareeTarget=seq[(seq.indexOf(mareeTarget)+1)%3];mareeNext+=p.mareeInt;setMareeBanner();sfx("tick");}
+      if(mareeTarget==="night")light*=0.12;
+      const wantGreen=mareeTarget==="low", ok=wantGreen?G>0.55:G<0.45;
+      if(ok){mareeGood+=dt; if(wantGreen&&acquired)energy=Math.min(100,energy+G*light*10*dt); else energy=Math.min(100,energy+2*dt);}
+      if(phaseT>cur.dur){const bonus=Math.round(Math.min(1,mareeGood/(cur.dur*0.6))*8);energy=Math.min(100,energy+bonus);
+        setFlash("BIEN RYTHMÉ","la colonie suit la marée (+"+bonus+")","var(--cyan)",1500);nextPhase();}
+    }else if(phase==="danger"){
+      if(phaseT<p.warn && Math.floor(phaseT*2)!==Math.floor((phaseT-dt)*2))sfx("tick");
+      bird.x=lerp(W+60,W*0.5,Math.min(1,phaseT/p.warn));bird.y=lerp(Hh*0.18,Hh*0.4,Math.min(1,phaseT/p.warn));
+      if(phaseT>=p.warn&&!dangerResolved){dangerResolved=true;const over=G-p.hideThresh;
+        if(over>0.10){health=Math.max(0,health-1);energy=Math.max(0,energy-8);stHit++;dangerHitFx=1;drawHearts();sfx("hit");dodgeStreak=0;
+          setFlash("TOUCHÉS !","trop d'algues exposées (-8)","var(--orange)",1300);}
+        else if(over>0){dangerHitFx=.5;sfx("tick");dodgeStreak=0;setFlash("JUSTE À TEMPS","des algues encore visibles","var(--orange-soft)",1200);}
+        else{dodgeStreak++;bestStreak=Math.max(bestStreak,dodgeStreak);const combo=1+Math.min(4,dodgeStreak-1)*0.5;
+          energy=Math.min(100,energy+4*combo);stDodge++;sfx("dodge");
+          setFlash(dodgeStreak>1?"ESQUIVE ×"+dodgeStreak:"ESQUIVÉ !","colonie à l'abri","var(--green)",1100);}}
+      if(phaseT>cur.dur&&state==="play")nextPhase();
+    }else if(phase==="predator"){
+      if(phaseT<p.warn && Math.floor(phaseT*2)!==Math.floor((phaseT-dt)*2))sfx("tick");
+      const tx=predSide==="L"?W*0.25:W*0.75;
+      bird.x=lerp(predSide==="L"?-60:W+60,tx,Math.min(1,phaseT/p.warn));bird.y=lerp(Hh*0.16,Hh*0.42,Math.min(1,phaseT/p.warn));
+      if(phaseT>=p.warn&&!predResolved){predResolved=true;
+        const yTgt=predSide==="L"?sig.yL:sig.yR, gOther=predSide==="L"?sig.gR:sig.gL;
+        if(yTgt>0.5){stDodge++;sfx("dodge");let b=4;if(gOther>0.45){b+=4;}energy=Math.min(100,energy+b);
+          setFlash("BIEN JOUÉ","côté visé caché, l'autre a produit","var(--green)",1400);}
+        else{health=Math.max(0,health-1);energy=Math.max(0,energy-8);stHit++;dangerHitFx=1;drawHearts();sfx("hit");
+          setFlash("TOUCHÉS !","le côté visé ne s'est pas caché (-8)","var(--orange)",1400);}}
+      if(phaseT>cur.dur&&state==="play")nextPhase();
+    }else if(phase==="bleach"){
+      const lo=0.45, hi=0.80;
+      if(G<lo){stress=Math.min(1.2,stress+(lo-G)*dt*0.9);}
+      else if(G>hi){stress=Math.min(1.2,stress+(G-hi)*dt*1.5);}
+      else{stress=Math.max(0,stress-dt*0.7);bleachGood+=dt;if(acquired)energy=Math.min(100,energy+G*light*12*dt);}
+      $("#bleachBar i").style.width=Math.round(Math.min(1,stress)*100)+"%";
+      if(stress>=1){health=Math.max(0,health-1);energy=Math.max(0,energy-8);drawHearts();sfx("bleach");stress=0;dangerHitFx=1;
+        setFlash("BLANCHIMENT","les algues souffrent — relâchez le vert (-8)","var(--yellow)",1600);}
+      if(phaseT>cur.dur){const bonus=Math.round(Math.min(1,bleachGood/(cur.dur*0.6))*10);energy=Math.min(100,energy+bonus);
+        setFlash(bonus>5?"ÉQUILIBRE TROUVÉ":"SYMBIOSE FRAGILE","comme un corail bien géré (+"+bonus+")","var(--green)",1800);nextPhase();}
+    }else if(phase==="phototaxie"){
+      const win=cur.dur/2, localT=phaseT-zFlip*win;
+      if(localT>win){zFlip++;if(zFlip<2){pheading=pheading==="left"?"right":"left";setZoneBanner();}}
+      const left=pheading==="left", corrL=left?sig.gL:sig.yL, corrR=left?sig.yR:sig.gR;
+      $("#zmL").style.width=(corrL*100)+"%";$("#zmR").style.width=(corrR*100)+"%";
+      if(localT>win*0.5){zScoreSum+=(corrL+corrR)/2;zEvals++;}
+      if(phaseT>cur.dur){const sc=zEvals?zScoreSum/zEvals:0,bonus=Math.round(sc*8);energy=Math.min(100,energy+bonus);
+        setFlash(sc>0.6?"BIEN ORIENTÉS !":"PRESQUE","la colonie suit la lumière (+"+bonus+")",sc>0.6?"var(--green)":"var(--orange)",1700);showInfo(9);nextPhase();}
+    }else if(phase==="greenwave"){
+      if(phaseT>waveNext){waveSeg++;waveSide=waveSide==="L"?"R":"L";waveNext+=3.2;sfx("sun");
+        $("#zbTxt").textContent="";}
+      const green=waveSide==="L"?sig.gL:sig.gR, other=waveSide==="L"?sig.yR:sig.yL;
+      $("#zmLlbl").textContent=waveSide==="L"?"Groupe 1 · au VERT":"Groupe 1 · au bleu";
+      $("#zmRlbl").textContent=waveSide==="R"?"Groupe 2 · au VERT":"Groupe 2 · au bleu";
+      $("#zmL").style.width=(sig.gL*100)+"%";$("#zmR").style.width=(sig.gR*100)+"%";
+      if(green>0.5&&other>0.35){waveScore+=dt;if(acquired)energy=Math.min(100,energy+6*dt);}
+      if(phaseT>cur.dur){const bonus=Math.round(Math.min(1,waveScore/(cur.dur*0.5))*8);energy=Math.min(100,energy+bonus);
+        setFlash(bonus>4?"BELLE VAGUE !":"PRESQUE","le vert a voyagé (+"+bonus+")","var(--green)",1700);showInfo(7);nextPhase();}
+    }else if(phase==="night"){
+      if(G<0.3)nightGood+=dt;
+      if(phaseT>cur.dur){ if(nightGood>cur.dur*0.6){ if(PROFILE==="6e"&&health<maxHealth){health++;drawHearts();setFlash("REPOS RÉPARATEUR","la colonie récupère","var(--green)",1600);} else setFlash("BONNE NUIT","colonie reposée","var(--cyan)",1400);} else setFlash("NUIT AGITÉE","il fallait montrer le bleu","var(--orange)",1400); nextPhase(); }
+    }else if(phase==="photo"){
+      if(!photo){nextPhase();}
+      else if(pLocked===false){
+        pT+=dt;const o=photo[pIdx];
+        $("#pTimer i").style.width=(Math.max(0,1-pT/p.quizT)*100)+"%";
+        $("#pSg").style.width=(G*100)+"%";$("#pSy").style.width=((1-G)*100)+"%";
+        $("#pVote").textContent="vote en cours : "+Math.round(G*100)+" % vert";
+        if(pT>=p.quizT){pLocked=true;pT=0;const ans=G>0.5,ok=(ans===o.a);
+          if(ok){pScore++;const st=document.querySelector('.pstage[data-s="'+Math.min(3,pStep)+'"]');if(st)st.classList.add("on");pStep++;sfx("dodge");
+            $("#pVote").innerHTML='<span style="color:var(--green)">\u2714 r\u00e9ponse '+(ans?"VRAI":"FAUX")+' \u2014 bien vu</span>';}
+          else{sfx("hit");$("#pVote").innerHTML='<span style="color:var(--orange)">\u2718 rat\u00e9 \u2014 c\u2019\u00e9tait '+(o.a?"VRAI (vert)":"FAUX (bleu)")+'</span>';}}
+      }else if(pLocked===true){
+        pT+=dt;if(pT>1.7){pIdx++;if(pIdx<photo.length){loadPhotoQ();}
+          else{pLocked=2;pT=0;const eff=pScore/photo.length,bonus=Math.round(eff*22);energy=Math.min(100,energy+bonus);
+            $("#pQ").textContent="Conversion réussie à "+Math.round(eff*100)+" %";$("#pHint").innerHTML="";
+            $("#pTimer").style.visibility="hidden";$("#pVote").textContent="";
+            $("#pEff").textContent="+"+bonus+" % d'énergie stockée dans la colonie";sfx("win");}}
+      }else{pT+=dt;if(pT>2.6){$("#pTimer").style.visibility="visible";nextPhase();}}
+    }else if(phase==="carnivore"){
+      const trigT=cur.dur*0.62;
+      bird.x=lerp(W+60,W*0.5,Math.min(1,phaseT/trigT));bird.y=lerp(Hh*0.25,Hh*0.63,Math.min(1,phaseT/trigT));
+      if(phaseT<trigT&&G>0.5)carnGood+=dt;
+      if(phaseT>=trigT&&!carnResolved){
+        carnResolved=true;
+        const attractBonus=Math.round(Math.min(1,carnGood/(trigT*0.55))*6);
+        if(G<0.42){energy=Math.min(100,energy+14+attractBonus);sfx("dodge");setFlash("PIÈGE REFERMÉ !","la plante capte son azote (+"+(14+attractBonus)+")","var(--green)",1600);}
+        else{energy=Math.min(100,energy+4+attractBonus);sfx("tick");setFlash("RATÉ DE PEU","il fallait montrer le bleu au bon moment","var(--orange-soft)",1600);}
+        bird.active=false;
+      }
+      if(phaseT>cur.dur)nextPhase();
+    }else if(phase==="earthworm"){
+      const m=readMotion(); if(m!=null) lastMotion=m;
+      if(phaseT>=wormFreezeAt && phaseT-dt<wormFreezeAt){setFlash("FREEZE !","plus un geste","var(--cyan)",1400);sfx("tick");}
+      if(phaseT>wormFreezeAt && phaseT<cur.dur-0.8){ if(m!=null && m<0.18) wormGood+=dt; }
+      if(phaseT>cur.dur){
+        const win=Math.max(0.1,cur.dur-0.8-wormFreezeAt);
+        const bonus=Math.max(4,Math.round(Math.min(1,wormGood/win)*14));
+        energy=Math.min(100,energy+bonus);
+        setFlash(bonus>8?"IMMOBILES !":"PRESQUE FIGÉS","le ver de terre n'a pas besoin de vert pour ça (+"+bonus+")","var(--cyan)",2000);
+        nextPhase();
+      }
+    }else if(phase==="cheer"){
+      const flickSt = G>0.6?"green":(G<0.4?"blue":null);
+      if(flickSt && flickSt!==flickerState){ if(flickerState!==null) flickerCount++; flickerState=flickSt; }
+      if(phaseT>cur.dur){const bonus=Math.round(Math.min(1,flickerCount/12)*16);energy=Math.min(100,energy+bonus);
+        setFlash(flickerCount>=8?"ÇA S'AGITE !":"ENCORE UN EFFORT","la colonie s'agite (+"+bonus+")","var(--magenta)",1800);sfx("win");nextPhase();}
+    }else if(phase==="final"){
+      if(acquired)energy=Math.min(100,energy+G*light*22*dt);
+      if(energy>=100)endGame(true); if(phaseT>cur.dur)endGame(energy>=P().winAt);
+    }
+    $("#energyFill").style.width=energy+"%";$("#energyTxt").textContent=Math.round(energy)+" %";
+    if(plan[roundIdx])$("#phaseBar i").style.width=Math.min(100,phaseT/plan[roundIdx].dur*100)+"%";
+  }
+
+  $("#gfill").style.height=(G*100)+"%";$("#gPct").textContent=Math.round(G*100)+"%";
+  $("#gthresh").style.bottom=(P().hideThresh*100)+"%";
+  updateCamHud();
+
+  drawScene(t,dt);updateMascot();
+}
+
+/* ---- éveil de la colonie (calibration gamifiée) ---- */
+let awakenSteps=[], awakenIdx=0, holdT=0, stepElapsed=0, warmTarget=null, warmT=0, warmCount=0, warmReacts=[], warmArmed=false;
+function buildAwaken(){
+  awakenSteps=[
+    {t:"intro"},
+    {t:"zone",side:"L",color:"green"},
+    {t:"zone",side:"L",color:"yellow"},
+    {t:"zone",side:"R",color:"green"},
+    {t:"zone",side:"R",color:"yellow"},
+    {t:"warm"}
+  ];
+  awakenIdx=0;holdT=0;warmTarget=null;warmT=0;warmCount=0;warmReacts=[];warmArmed=false;
+  enterAwakenStep();
+}
+function enterAwakenStep(){
+  const s=awakenSteps[awakenIdx];holdT=0;stepElapsed=0;
+  $("#awakenReact").textContent="";
+  $("#amL").classList.remove("ok");$("#amR").classList.remove("ok");
+  $("#awakenProg").textContent="étape "+(awakenIdx+1)+" / "+awakenSteps.length;
+  const showMeters=(s.t==="zone");
+  $("#awakenMeters").style.display=showMeters?"flex":"none";
+  updateCamSplit(showMeters);
+  if(s.t==="intro"){
+    $("#awTitle").textContent="LE RÉVEIL";
+    $("#awInstr").innerHTML="La colonie s'éveille. Avant le jour, chaque groupe apprend ses deux gestes. <b>Vert</b>, j'ouvre mes algues au soleil. <b>Bleu</b>, je plonge dans le sable.";
+    $("#awMeaning").textContent="";
+    setFlash("ÉVEIL","la colonie se réveille","var(--green)",1600);
+  }
+  if(s.t==="zone"){
+    const c1=s.side==="L", who=c1?"Groupe 1":"Groupe 2";
+    const col=s.color==="green"?"le VERT":"le BLEU";
+    $("#awTitle").textContent=(c1?"COLONIE 1":"COLONIE 2");
+    $("#awInstr").innerHTML="<b>"+who+"</b>, montrez "+(s.color==="green"?'<b style="color:var(--green)">'+col+"</b>":'<b style="color:var(--yellow)">'+col+"</b>")+" et gardez levé.";
+    $("#awMeaning").innerHTML=s.color==="green"
+      ? "le vert, ce sont mes algues au soleil : la vie et l'énergie"
+      : "le bleu, c'est plonger dans le sable : se cacher, se protéger";
+    // objectif visuel : seuil sur la barre concernée
+    const goalL=$("#amLgoal"),goalR=$("#amRgoal");goalL.style.left="55%";goalR.style.left="55%";
+    $("#amLlbl").innerHTML="Groupe 1 <span class=\"voyant\" id=\"voyAwL\">NC</span>";
+    $("#amRlbl").innerHTML="Groupe 2 <span class=\"voyant\" id=\"voyAwR\">NC</span>";
+  }
+  if(s.t==="warm"){
+    $("#awTitle").textContent="LE VER DE ROSCOFF DIT…";
+    $("#awInstr").innerHTML="Échauffement ! Quand j'annonce <b style='color:var(--green)'>SOLEIL</b>, tout le monde au vert. Quand j'annonce <b style='color:var(--orange)'>DANGER</b>, tout le monde au bleu. De plus en plus vite.";
+    $("#awMeaning").textContent="";
+    warmCount=0;warmTarget=null;warmT=0.8;warmArmed=false;warmReacts=[];
+  }
+}
+function awakenTick(t,dt){
+  const s=awakenSteps[awakenIdx]; sig=readSignal();
+  let R=sig.G; if(R==null)R=lastR; else lastR=R; G=lerp(G,R,0.2);
+  if(s.t==="intro"){
+    holdT+=dt; if(holdT>2.6){awakenIdx++;enterAwakenStep();}
+  }else if(s.t==="zone"){
+    const c1=s.side==="L";
+    const frac = s.color==="green" ? (c1?sig.gL:sig.gR) : (c1?sig.yL:sig.yR);
+    const fillEl=c1?$("#amLfill"):$("#amRfill");
+    const otherFill=c1?$("#amRfill"):$("#amLfill");
+    fillEl.style.background=s.color==="green"?"var(--green)":"var(--yellow)";
+    fillEl.style.width=Math.round(frac*100)+"%"; otherFill.style.width="0%";
+    const amEl=c1?$("#amL"):$("#amR");
+    if(frac>0.55){holdT+=dt; if(holdT>0.9){amEl.classList.add("ok");sfx("dodge");
+        setFlash("✔","c'est ça !","var(--green)",700);
+        setTimeout(()=>{},0); awakenIdx++;enterAwakenStep();return;}}
+    else{holdT=Math.max(0,holdT-dt*0.5);stepElapsed+=dt;
+      if(stepElapsed>2.5) $("#awakenReact").textContent="Peu de "+(s.color==="green"?"vert":"bleu")+" détecté ici — plus de lumière, cartes plus hautes, ou recalibrer ce coin.";
+    }
+  }else if(s.t==="warm"){
+    $("#awakenMeters").style.display="none";
+    warmT-=dt;
+    if(warmTarget===null && warmT<=0){
+      warmTarget=Math.random()<0.5?"green":"yellow";warmArmed=true;
+      if(warmTarget==="green"){setFlash("SOLEIL","au vert !","var(--green)",1400);sfx("sun");}
+      else{setFlash("DANGER","au bleu !","var(--orange)",1400);sfx("danger");}
+      warmT=0; warmStart=t;
+    }
+    if(warmArmed){
+      const good = warmTarget==="green" ? G>0.6 : G<0.4;
+      if(good){const rt=Math.max(0,(t-warmStart)).toFixed(2);warmReacts.push(+rt);warmArmed=false;warmTarget=null;warmCount++;sfx("dodge");
+        if(PROFILE==="terminale")$("#awakenReact").textContent="réaction "+rt+" s";
+        warmT=0.7+Math.random()*0.7;}
+    }
+    const need=PROFILE==="6e"?3:4;
+    $("#awakenProg").textContent="échauffement "+Math.min(warmCount,need)+" / "+need;
+    if(warmCount>=need){
+      if(PROFILE==="terminale"&&warmReacts.length){const avg=(warmReacts.reduce((a,b)=>a+b,0)/warmReacts.length).toFixed(2);
+        setFlash("PRÊTS","réaction moyenne "+avg+" s","var(--green)",1600);}
+      else setFlash("PRÊTS","la colonie est réveillée","var(--green)",1600);
+      startGame();
+    }
+  }
+}
+let warmStart=0;
+
+/* ---- mascotte ---- */
+let curMascot="m-repos";
+function setMascot(id){if(id===curMascot)return;curMascot=id;
+  const a=$("#mascotAvatar");
+  if(a){const im=IMG.mascotte[id];if(im)a.src=im.src;a.classList.add("pulse");setTimeout(()=>a.classList.remove("pulse"),200);}}
+function updateMascot(){
+  if(state==="awaken"){const s=awakenSteps[awakenIdx];
+    if(s&&s.t==="zone"&&s.color==="yellow")setMascot("m-hide");
+    else if(s&&s.t==="warm"&&warmTarget==="yellow")setMascot("m-hide");
+    else setMascot("m-ray");return;}
+  if(state!=="play"){setMascot("m-repos");return;}
+  if(phase==="danger"||phase==="predator"||phase==="night"||phase==="earthworm")setMascot("m-hide");
+  else if(isLightPhase(phase)&&G>0.4)setMascot("m-ray");
+  else setMascot("m-repos");}
+
+/* ---- FX & info ---- */
+let flashTimer=null;
+function setFlash(big,sub,color,ms){$("#flashBig").textContent=big;$("#flashSub").textContent=sub;
+  $("#flashBig").style.color=color;$("#flashSub").style.color=color;const f=$("#flash");f.classList.add("show");
+  clearTimeout(flashTimer);flashTimer=setTimeout(()=>f.classList.remove("show"),ms);}
+let infoTimer=null;
+function showInfo(i){const o=INFOS[i];if(!o)return;$("#infoTitle").textContent=o.t;$("#infoText").innerHTML=o.x;
+  const img=$("#infoImg");if(o.img){img.src=o.img;img.classList.add("show");}else{img.classList.remove("show");}
+  const el=$("#info");el.classList.add("show");clearTimeout(infoTimer);infoTimer=setTimeout(()=>el.classList.remove("show"),6500);}
+let transformTimer=null;
+function showTransform(){
+  $("#trBefore").src="assets/photo-avant.png";$("#trAfter").src="assets/photo-apres.png";
+  const el=$("#transformReveal");el.classList.add("show");
+  clearTimeout(transformTimer);transformTimer=setTimeout(()=>el.classList.remove("show"),3800);
+}
+let chapterTimer=null;
+function showChapter(title,text,ms){
+  $("#ccTitle").textContent=title;$("#ccText").innerHTML=text;
+  const el=$("#chapterCard");el.classList.add("show");
+  clearTimeout(chapterTimer);chapterTimer=setTimeout(()=>el.classList.remove("show"),ms||4200);
+}
+function drawHearts(){const h=$("#hearts");h.innerHTML="";for(let i=0;i<maxHealth;i++){const s=document.createElement("span");s.textContent="◆";s.style.color="var(--green)";if(i>=health)s.className="dead";h.appendChild(s);}}
+
+/* ---- contrôle de partie ---- */
+function applyProfileHud(){const p=P();
+  $("#energyPanel").style.display=p.showEnergy?"flex":"none";
+  $("#competePanel").style.display=p.compete?"flex":"none";
+  $("#gaugeLab").innerHTML=PROFILE==="6e"?"Verdeur<br>de la plage":"Verdeur<br>colonie";}
+function resetRun(){const p=P();maxHealth=p.hp;energy=0;health=maxHealth;acquired=false;acquireProg=0;G=0;tide=0;infoQueue=[];
+  bubbles=[];stDodge=0;stHit=0;stMaxG=0;dodgeStreak=0;bestStreak=0;scoreL=0;scoreR=0;stress=0;
+  carnResolved=false;carnGood=0;wormGood=0;flickerCount=0;flickerState=null;prevFrame=null;lastMotion=0;prevSimV=(+$("#sim").value)/100;acqGood=0;
+  photo=null;pLocked=false;hideOverlays();$("#pTimer").style.visibility="visible";
+  $("#scoreLtxt").textContent="0";$("#scoreRtxt").textContent="0";}
+function startGame(){resetRun();applyProfileHud();
+  $("#awakenOv").classList.remove("show");
+  curMascot="";setMascot("m-repos");startAmbience();buildPlan();drawHearts();
+  $("#titleScreen").classList.add("hidden");$("#calScreen").classList.add("hidden");$("#endScreen").classList.add("hidden");
+  if(MODE==="cam"&&camReady)$("#cam").style.display="block";
+  $("#simWrap").style.display=(MODE==="sim")?"flex":"none";
+  $("#phaseJump").style.display=(MODE==="sim")?"inline-block":"none";
+  state="play";setPhase("acquire");}
+function startAwaken(){applyProfileHud();
+  $("#titleScreen").classList.add("hidden");$("#calScreen").classList.add("hidden");$("#endScreen").classList.add("hidden");
+  if(MODE==="cam"&&camReady)$("#cam").style.display="block";
+  $("#simWrap").style.display=(MODE==="sim")?"flex":"none";
+  $("#phaseJump").style.display=(MODE==="sim")?"inline-block":"none";
+  $("#pvLegend").classList.remove("show");
+  state="awaken";$("#awakenOv").classList.add("show");buildAwaken();startAmbience();}
+function endGame(win){if(state!=="play")return;state="end";stopAmbience();sfx(win?"win":"lose");
+  hideOverlays();$("#pvLegend").classList.remove("show");
+  const es=$("#endScreen");es.classList.remove("hidden");es.classList.toggle("win",win);es.classList.toggle("lose",!win);
+  const em=$("#endMascotUse"),mid=win?"m-win":"m-hide";if(em){const im=IMG.mascotte[mid];if(im)em.src=im.src;}
+  // record du jour
+  let best=0;try{best=+localStorage.getItem("pv_best_"+PROFILE)||0;}catch(e){}
+  const e=Math.round(energy);let rec=false;if(e>best){best=e;rec=true;try{localStorage.setItem("pv_best_"+PROFILE,best);}catch(er){}}
+  let stats=`ÉNERGIE ${e} %  ·  ESQUIVES ${stDodge}  ·  MEILLEURE SÉRIE ×${bestStreak}  ·  VERDEUR MAX ${Math.round(stMaxG*100)} %`;
+  if(P().compete){const g=Math.round(scoreL),d=Math.round(scoreR),winner=g===d?"ÉGALITÉ":(g>d?"GROUPE 1":"GROUPE 2");
+    stats=`GROUPE 1 ${g}  ·  GROUPE 2 ${d}  →  ${winner}\n`+stats;}
+  stats+=`  ·  RECORD DU JOUR ${best} %`;
+  $("#endStats").textContent=stats;
+  if(win){$("#endKick").textContent=rec?"nouveau record !":"colonie prospère";$("#endTitle").textContent="PLAGE VERTE";
+    $("#endText").innerHTML=`La colonie a stocké <b>${e} %</b> d'énergie et survécu. Le sable se couvre d'un vert profond : la photosymbiose a gagné.`;}
+  else{$("#endKick").textContent="colonie en péril";$("#endTitle").textContent=health<=0?"COLONIE DÉCIMÉE":"TROP PÂLE";
+    $("#endText").innerHTML=health<=0?`Les dangers ont eu le dessus : la colonie ne s'est pas cachée à temps.`:`Pas assez d'énergie captée. Réessayez en montrant plus de vert au soleil, au bon moment.`;}}
+
+/* ---- événements ---- */
+$("#modeSeg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;
+  [...e.currentTarget.children].forEach(x=>x.classList.remove("on"));b.classList.add("on");MODE=b.dataset.mode;
+  $("#camNote").style.display=MODE==="cam"?"block":"none";
+  $("#phaseJump").style.display=(MODE==="sim")?"inline-block":"none";});
+$("#profSeg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;
+  [...e.currentTarget.children].forEach(x=>x.classList.remove("on"));b.classList.add("on");PROFILE=b.dataset.prof;});
+
+$("#calBtn").addEventListener("click",async()=>{
+  if(MODE==="sim"){setFlash("Mode simulation","calibration inutile au curseur","var(--orange)",1600);return;}
+  const ok=await startCam();
+  if(!ok){setFlash("Caméra indisponible","autorisez la webcam (https/localhost)","var(--orange)",2000);return;}
+  $("#calSave").disabled=!(greenDone&&yellowDone);
+  $("#titleScreen").classList.add("hidden");$("#calScreen").classList.remove("hidden");
+  state="cal";requestAnimationFrame(loop);
+});
+$("#capGreen").addEventListener("click",()=>beginCapture("green"));
+$("#capYellow").addEventListener("click",()=>beginCapture("yellow"));
+$("#calSave").addEventListener("click",()=>{saveCal();refreshCalState();state="title";
+  $("#calScreen").classList.add("hidden");$("#titleScreen").classList.remove("hidden");
+  setFlash("Salle calibrée","réglage mémorisé","var(--green)",1500);});
+$("#calBack").addEventListener("click",()=>{state="title";$("#calScreen").classList.add("hidden");$("#titleScreen").classList.remove("hidden");});
+$("#satMin").addEventListener("input",e=>{cal.sMin=+e.target.value/100;$("#satTxt").textContent=cal.sMin.toFixed(2);});
+$("#tol").addEventListener("input",e=>{cal.tol=+e.target.value;$("#tolTxt").textContent=e.target.value;});
+
+$("#startBtn").addEventListener("click",async()=>{
+  if(MODE==="sim"){startAwaken();return;}
+  const ok=await startCam();
+  if(!ok){setFlash("Caméra indisponible","passage en simulation","var(--orange)",1600);MODE="sim";
+    [...$("#modeSeg").children].forEach(x=>x.classList.toggle("on",x.dataset.mode==="sim"));startAwaken();return;}
+  if(!(greenDone&&yellowDone)){setFlash("Salle non calibrée","faites d'abord le réglage du matin","var(--orange)",2200);
+    $("#calBtn").click();return;}
+  startAwaken();
+});
+$("#awSkip").addEventListener("click",()=>{if(state==="awaken")startGame();});
+$("#awQuit").addEventListener("click",()=>toMenu());
+$("#againBtn").addEventListener("click",()=>{ if(MODE==="cam"&&camReady) startAwaken(); else startGame(); });
+$("#menuBtn").addEventListener("click",()=>toMenu());
+$("#sndBtn").addEventListener("click",()=>{muted=!muted;$("#sndBtn").textContent="Son : "+(muted?"off":"on");if(muted)stopAmbience();else if(state==="play")startAmbience();});
+$("#quitBtn").addEventListener("click",()=>toMenu());
+$("#fsBtn").addEventListener("click",()=>{if(!document.fullscreenElement)document.documentElement.requestFullscreen?.();else document.exitFullscreen?.();});
+/* debug : sauter directement a une phase (mode simulation) */
+function debugJump(kind){
+  if(!kind) return;
+  if(state!=="play"){
+    resetRun();applyProfileHud();buildPlan();drawHearts();
+    $("#awakenOv").classList.remove("show");
+    $("#titleScreen").classList.add("hidden");$("#calScreen").classList.add("hidden");$("#endScreen").classList.add("hidden");
+    if(MODE==="cam"&&camReady)$("#cam").style.display="block";
+    $("#simWrap").style.display=(MODE==="sim")?"flex":"none";
+    $("#phaseJump").style.display=(MODE==="sim")?"inline-block":"none";
+    curMascot="";setMascot("m-repos");startAmbience();
+    state="play";acquired=true;acquireProg=1;
+  }
+  let idx=plan.findIndex(pp=>pp.k===kind);
+  if(idx<0){
+    const durMap={acquire:10,sun:8,maree:12,danger:6,predator:8,carnivore:9,earthworm:10,bleach:16,phototaxie:15,greenwave:14,night:7,photo:P().quizN*P().quizT+3,cheer:8,final:14};
+    plan.push({k:kind,dur:durMap[kind]||10});idx=plan.length-1;
+  }
+  roundIdx=idx;setPhase(kind);
+  $("#phaseJump").value="";
+}
+$("#phaseJump").addEventListener("change",e=>debugJump(e.target.value));
+function toMenu(){state="title";stopAmbience();hideOverlays();$("#pvLegend").classList.remove("show");
+  $("#awakenOv").classList.remove("show");$("#endScreen").classList.add("hidden");$("#calScreen").classList.add("hidden");
+  $("#titleScreen").classList.remove("hidden");$("#cam").style.display="none";}
+window.addEventListener("keydown",e=>{
+  if(e.code==="Space"&&MODE==="sim"){$("#sim").value=90;e.preventDefault();}
+  if(e.key==="d"||e.key==="D"){$("#cam").dataset.dbg=$("#cam").dataset.dbg==="1"?"0":"1";}
+});
+window.addEventListener("keyup",e=>{if(e.code==="Space"&&MODE==="sim")$("#sim").value=10;});
+
+/* ---- init ---- */
+$("#camNote").style.display="block";
+if(loadCal()) refreshCalState(); else refreshCalState();
+applyProfileHud();
+resize();drawHearts();requestAnimationFrame(loop);
+</script>
+</body>
+</html>

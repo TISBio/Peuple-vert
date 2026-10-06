@@ -1,0 +1,18 @@
+# Hors du dépôt : volumineux, brut ou sans rapport avec le jeu.
+# (Ces dossiers restent sur le PC principal : à sauvegarder à part si besoin.)
+Pierre/
+images vers/
+images/
+peuple-vert-portable/
+*.zip
+vers.jpeg
+
+# bck/ : on garde seulement les anciennes versions HTML et le PDF des cartes
+bck/*
+!bck/*.html
+!bck/*.pdf
+
+# divers
+*.pptx
+Thumbs.db
+.DS_Store
