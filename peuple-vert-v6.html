@@ -12,7 +12,7 @@
     --bg:#07080B; --bg2:#0D1016;
     --green:#B6FF3C; --green-soft:#D8FF8E; --green-deep:#5C9A1E;
     --orange:#FF2E6A; --orange-soft:#FF7FA8; --cyan:#29F1FF;
-    --yellow:#2255DD; --ink:#E7ECEF;
+    --yellow:#E8483A; --ink:#E7ECEF;
     --panel:rgba(13,16,22,.76); --line:rgba(182,255,60,.35);
     --magenta:#FF2E9A;
     --font-display:"Tourney","Arial Narrow",sans-serif;
@@ -138,7 +138,7 @@
   .camZoneLbl .gMsg{font-size:24px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,.72);padding:6px 16px;border-radius:6px;border:2px solid transparent;line-height:1.1}
   .camZoneLbl .gMsg:empty{visibility:hidden}
   .camZoneLbl .gMsg.green{background:rgba(0,178,71,.92);color:#021a0a;border-color:#7dffb0}
-  .camZoneLbl .gMsg.blue{background:rgba(34,85,221,.94);color:#eef4ff;border-color:#8fb0ff}
+  .camZoneLbl .gMsg.red{background:rgba(232,72,58,.94);color:#fff;border-color:#ffb3a8}
   .camZoneLbl .gMsg.neutral{background:rgba(40,46,56,.9);color:#cfd6df}
 
   /* voyant de signal caméra */
@@ -154,7 +154,7 @@
   #pvLegend span{display:flex;align-items:center;gap:14px}
   #pvLegend i{width:clamp(28px,2.6vw,40px);height:clamp(28px,2.6vw,40px);border-radius:6px;box-shadow:0 0 12px rgba(0,0,0,.6)}
   #pvLegend em{font-style:normal;font-family:var(--font-display);font-weight:900;letter-spacing:.08em}
-  #pvLegend em.cg{color:var(--green)} #pvLegend em.cb{color:#6f9bff}
+  #pvLegend em.cg{color:var(--green)} #pvLegend em.cb{color:#ff8a7a}
   #pvLegend b{font-weight:800;color:var(--ink)}
   #pvLegend.nocolor em,#pvLegend.nocolor i{display:none}
   #transformReveal{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.9);z-index:31;
@@ -263,7 +263,7 @@
   .btn:disabled{opacity:.4;cursor:not-allowed}
   .btn.ghost{background:transparent;color:var(--green);border:1px solid var(--green);box-shadow:none}
   .btn.orange{background:var(--orange);box-shadow:0 0 16px rgba(255,122,24,.4)}
-  .btn.yellow{background:var(--yellow);color:#eef4ff;box-shadow:0 0 16px rgba(34,85,221,.5)}
+  .btn.yellow{background:var(--yellow);color:#fff;box-shadow:0 0 16px rgba(232,72,58,.5)}
 
   /* SCREENS */
   .screen{position:absolute;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:26px;
@@ -367,7 +367,7 @@
           <div class="camZoneLbl camZoneLbl-r"><div class="gName">Groupe 2 <span class="voyant" id="voyDotR">NC</span></div><div class="gMsg" id="gMsgR"></div></div>
         </div>
       </div>
-      <div class="clab" id="camLab">vert <span id="camG">0</span> · <b>bleu</b> <span id="camY">0</span><span class="voyant" id="voyDot">NC</span></div></div>
+      <div class="clab" id="camLab">vert <span id="camG">0</span> · <b>rouge</b> <span id="camY">0</span><span class="voyant" id="voyDot">NC</span></div></div>
 
     <div id="flash"><div class="fbig" id="flashBig"></div><div class="fsub" id="flashSub"></div></div>
     <div id="info"><img id="infoImg" alt=""><div class="ititle" id="infoTitle"></div><div class="itext" id="infoText"></div></div>
@@ -379,7 +379,7 @@
     <!-- quiz -->
     <div id="photoOverlay">
       <div class="ptitle">Usine à sucres</div>
-      <div class="psub">convertir la lumière en énergie — votez vert ou bleu</div>
+      <div class="psub">convertir la lumière en énergie — votez vert ou rouge</div>
       <div id="pipeline">
         <div class="pstage" data-s="0"><div class="pn">Étape 1</div><div class="pv">Lumière captée</div></div>
         <div class="parrow">▸</div>
@@ -427,7 +427,7 @@
 
     <div id="pvLegend">
       <span><i style="background:var(--green)"></i><em class="cg">VERT</em><b id="pvLgG">algues au soleil</b></span>
-      <span><i style="background:var(--yellow)"></i><em class="cb">BLEU</em><b id="pvLgY">cachées dans le sable</b></span>
+      <span><i style="background:var(--yellow)"></i><em class="cb">ROUGE</em><b id="pvLgY">cachées dans le sable</b></span>
     </div>
 
     <div id="transformReveal">
@@ -481,8 +481,8 @@
     <h1 class="title"><span class="glitchtitle" data-text="Le Peuple">Le Peuple</span><br><span class="holoword">Vert</span></h1>
     <div class="sci">Symsagittifera roscoffensis · le ver de Roscoff</div>
     <p class="lede">Vous êtes une colonie de vers photosymbiotiques. Exposez vos algues (face <b style="color:var(--green)">verte</b>)
-      au soleil pour fabriquer de l'énergie, et plongez dans le sable (face <b style="color:var(--yellow)">bleue</b>) dès qu'un danger surgit.
-      La caméra mesure le rapport vert / bleu de la colonie.</p>
+      au soleil pour fabriquer de l'énergie, et plongez dans le sable (face <b style="color:var(--yellow)">rouge</b>) dès qu'un danger surgit.
+      La caméra mesure le rapport vert / rouge de la colonie.</p>
     <div class="row" style="margin-bottom:8px">
       <span style="font-size:11px;letter-spacing:.2em;color:var(--green-soft);text-transform:uppercase">Entrée</span>
       <div class="seg" id="modeSeg"><button data-mode="cam" class="on">Caméra</button><button data-mode="sim">Simulation</button></div>
@@ -494,7 +494,7 @@
       <button class="btn ghost" id="calBtn">Réglage salle (matin)</button>
     </div>
     <div class="calState todo" id="calState">Salle non calibrée — lancez le réglage du matin une fois sur place.</div>
-    <p class="note" id="camNote">Le réglage du matin capte le vert et le bleu sous l'éclairage réel : à faire <b>une seule fois</b> sur place, il est mémorisé.
+    <p class="note" id="camNote">Le réglage du matin capte le vert et le rouge sous l'éclairage réel : à faire <b>une seule fois</b> sur place, il est mémorisé.
       Chaque partie s'ouvre ensuite par le <b>réveil de la colonie</b>, qui apprend au groupe le sens des couleurs et vérifie la lecture.
       La webcam exige un contexte sécurisé : ouvrez la page en <b>https</b> ou via <b>localhost</b>. Le mode Simulation reproduit la partie au curseur.</p>
     <div class="hazardbar" style="width:min(90vw,520px);margin:16px 0 4px"></div>
@@ -515,12 +515,12 @@
       <div class="calPanel">
         <div class="calStep"><div class="calNum">1</div><div class="ct"><b>Cadrez la zone.</b> Déplacez le rectangle vert sur l'espace du groupe, redimensionnez par le coin. Tout ce qui est dehors est ignoré.</div></div>
         <div class="calStep"><div class="calNum">2</div><div class="ct"><b>Capturez le vert.</b> Faites lever la face verte, cliquez, gardez levé ~1,5 s (moyenne sur plusieurs images).<br><span id="rdGreen" class="todo">non calibré</span> <span class="swatch" id="swGreen" style="background:#444"></span></div></div>
-        <div class="calStep"><div class="calNum">3</div><div class="ct"><b>Capturez le bleu.</b> Face bleue levée, cliquez, gardez levé ~1,5 s.<br><span id="rdYellow" class="todo">non calibré</span> <span class="swatch" id="swYellow" style="background:#444"></span></div></div>
+        <div class="calStep"><div class="calNum">3</div><div class="ct"><b>Capturez le rouge.</b> Face rouge levée, cliquez, gardez levé ~1,5 s.<br><span id="rdYellow" class="todo">non calibré</span> <span class="swatch" id="swYellow" style="background:#444"></span></div></div>
         <div class="row" style="justify-content:flex-start;margin:6px 0 14px">
           <button class="btn green" id="capGreen" style="background:var(--green);color:var(--bg)">Capturer vert</button>
-          <button class="btn yellow" id="capYellow">Capturer bleu</button>
+          <button class="btn yellow" id="capYellow">Capturer rouge</button>
         </div>
-        <div class="calRead" id="calReadTxt">Le masque montre en direct les pixels classés vert / bleu. Ajustez si le fond est capté à tort :</div>
+        <div class="calRead" id="calReadTxt">Le masque montre en direct les pixels classés vert / rouge. Ajustez si le fond est capté à tort :</div>
         <div class="sliderRow"><label>Saturation min</label><input type="range" id="satMin" min="10" max="80" value="20"><span class="mono" id="satTxt" style="font-size:11px">0.20</span></div>
         <div class="sliderRow"><label>Tolérance °</label><input type="range" id="tol" min="10" max="45" value="35"><span class="mono" id="tolTxt" style="font-size:11px">35</span></div>
         <div class="row" style="justify-content:flex-start;margin-top:16px">
@@ -663,7 +663,7 @@ const maskCtx=maskCv.getContext("2d");
 let zL={g:0,y:0}, zR={g:0,y:0};
 let prevFrame=null, prevSimV=0;
 
-const cal={ green:{h:144}, yellow:{h:224}, sMin:0.20, vMin:0.06, vMax:0.99, tol:35,
+const cal={ green:{h:134}, yellow:{h:7}, sMin:0.20, vMin:0.10, vMax:0.99, tol:35,
             roi:{x:0.14,y:0.16,w:0.72,h:0.68} };
 
 function rgb2hsv(r,g,b){
@@ -674,6 +674,10 @@ function rgb2hsv(r,g,b){
   return {h, s:mx===0?0:d/mx, v:mx};
 }
 function hueDist(a,b){const x=Math.abs(a-b);return Math.min(x,360-x);}
+/* le ROUGE (id interne "yellow") est proche des teintes de peau : seuils plus stricts que le vert,
+   dérivés des deux curseurs de réglage (saturation min, tolérance) */
+function sMinRed(){ return Math.min(0.70,Math.max(0.45,cal.sMin*2.4)); }
+function tolRed(){ return Math.max(12,Math.round(cal.tol*0.45)); }
 
 /* source vidéo active : calVideo pendant l'écran de calibration (state==="cal"),
    sinon toujours video — calVideo reste "readyState>=2" indéfiniment même une fois
@@ -714,11 +718,11 @@ function analyze(buildMask){
       if(hsv.s>=cal.sMin && hsv.v>=cal.vMin && hsv.v<=cal.vMax){
         const dg=hueDist(hsv.h,cal.green.h), dy=hueDist(hsv.h,cal.yellow.h);
         if(dg<=cal.tol && dg<=dy){ g++; cls=1; if(i<mid)gL++;else gR++; }
-        else if(dy<=cal.tol){ y++; cls=2; if(i<mid)yL++;else yR++; }
+        else if(dy<=tolRed() && hsv.s>=sMinRed() && hsv.v>=0.16){ y++; cls=2; if(i<mid)yL++;else yR++; }
       }
       if(mask){
         if(cls===1){mask.data[idx]=20;mask.data[idx+1]=255;mask.data[idx+2]=120;mask.data[idx+3]=240;}
-        else if(cls===2){mask.data[idx]=34;mask.data[idx+1]=95;mask.data[idx+2]=255;mask.data[idx+3]=240;}
+        else if(cls===2){mask.data[idx]=255;mask.data[idx+1]=60;mask.data[idx+2]=50;mask.data[idx+3]=240;}
         else {mask.data[idx+3]=70;}
       }
     }
@@ -746,7 +750,7 @@ function readSignal(){
   }
 }
 
-/* voyant : indicateur visuel "signal capté ou non", indépendant du ratio vert/bleu */
+/* voyant : indicateur visuel "signal capté ou non", indépendant du ratio vert/rouge */
 function setVoyant(el,ok){
   if(!el) return;
   el.textContent=ok?"OK":"NC";
@@ -761,15 +765,15 @@ function updateCamSplit(showSplit){
 }
 function groupMsg(side){
   if(phase==="acquire") return side===acqSide ? "attirez (vert)" : "peu importe";
-  if(phase==="predator") return side===predSide ? "cachez (bleu)" : "produisez (vert)";
-  if(phase==="phototaxie") return ((side==="L")===(pheading==="left")) ? "au vert" : "au bleu";
+  if(phase==="predator") return side===predSide ? "cachez (rouge)" : "produisez (vert)";
+  if(phase==="phototaxie") return ((side==="L")===(pheading==="left")) ? "au vert" : "au rouge";
   return "";
 }
 function updateGroupMsgs(){
   if(state!=="play" || !LR_PHASES.has(phase)){ return; }
   const mL=groupMsg("L"), mR=groupMsg("R");
   const elL=$("#gMsgL"), elR=$("#gMsgR");
-  const colorOf=m=>/bleu/.test(m)?"blue":/vert/.test(m)?"green":"neutral";
+  const colorOf=m=>/rouge/.test(m)?"red":/vert/.test(m)?"green":"neutral";
   if(elL){elL.textContent=mL;elL.className="gMsg "+colorOf(mL);}
   if(elR){elR.textContent=mR;elR.className="gMsg "+colorOf(mR);}
 }
@@ -814,7 +818,7 @@ function beginCapture(key){
   const src = calVideo.readyState>=2 ? calVideo : video;
   if(!src || src.readyState<2){ setFlash("Caméra pas prête","patientez une seconde","var(--orange)",1400); return; }
   calAccKey=key; calAcc=new Float32Array(360); calAccUntil=performance.now()+1500;
-  $("#calReadTxt").textContent = key==="green" ? "Capture du VERT en cours… gardez les cartes levées." : "Capture du BLEU en cours… gardez les cartes levées.";
+  $("#calReadTxt").textContent = key==="green" ? "Capture du VERT en cours… gardez les cartes levées." : "Capture du ROUGE en cours… gardez les cartes levées.";
 }
 function accumulate(){
   if(!calAccKey) return;
@@ -824,15 +828,16 @@ function accumulate(){
   const rx=(cal.roi.x*CW)|0, ry=(cal.roi.y*CH)|0, rw=(cal.roi.w*CW)|0, rh=(cal.roi.h*CH)|0;
   for(let j=ry;j<ry+rh;j++)for(let i=rx;i<rx+rw;i++){
     const k=(j*CW+i)*4; const h=rgb2hsv(d[k],d[k+1],d[k+2]);
-    if(h.s>=cal.sMin && h.v>=cal.vMin && h.v<=cal.vMax) calAcc[(h.h|0)%360]+=h.s;
+    const smin = calAccKey==="yellow" ? sMinRed() : cal.sMin;
+    if(h.s>=smin && h.v>=cal.vMin && h.v<=cal.vMax) calAcc[(h.h|0)%360]+=h.s*h.s;
   }
   if(performance.now()>=calAccUntil) finishCapture();
 }
 function finishCapture(){
   const key=calAccKey; calAccKey=null;
   let n=0; for(let k=0;k<360;k++)n+=calAcc[k];
-  if(n<20){ setFlash("Pas assez de couleur","rapprochez les cartes / +lumière","var(--orange)",1600);
-    $("#calReadTxt").textContent="Le masque montre en direct les pixels classés vert / bleu."; return; }
+  if(n<12){ setFlash("Pas assez de couleur","rapprochez les cartes / +lumière","var(--orange)",1600);
+    $("#calReadTxt").textContent="Le masque montre en direct les pixels classés vert / rouge."; return; }
   const sm=new Float32Array(360);
   for(let k=0;k<360;k++){let s=0;for(let o=-6;o<=6;o++)s+=calAcc[(k+o+360)%360];sm[k]=s;}
   let peak=0;for(let k=1;k<360;k++)if(sm[k]>sm[peak])peak=k;
@@ -840,7 +845,7 @@ function finishCapture(){
   const hex=hsv2hex(peak,0.9,0.95);
   if(key==="green"){ $("#swGreen").style.background=hex; $("#rdGreen").textContent="teinte "+peak+"°"; $("#rdGreen").className="ok"; greenDone=true; }
   else { $("#swYellow").style.background=hex; $("#rdYellow").textContent="teinte "+peak+"°"; $("#rdYellow").className="ok"; yellowDone=true; }
-  $("#calReadTxt").textContent="Le masque montre en direct les pixels classés vert / bleu.";
+  $("#calReadTxt").textContent="Le masque montre en direct les pixels classés vert / rouge.";
   // garde-fou : les deux teintes doivent être franchement distinctes
   if(greenDone&&yellowDone&&hueDist(cal.green.h,cal.yellow.h)<40)
     setFlash("Couleurs trop proches","plus de lumière, cartes plus hautes","var(--orange)",2200);
@@ -856,18 +861,24 @@ function hsv2hex(h,s,v){
 }
 
 /* sauvegarde / restauration de la calibration du matin */
-/* v6 : clé propre (pv6_cal) car la ROI est enregistrée dans l'espace "miroir" ; la calibration v5
-   (clé pv_cal, espace non retourné) est relue en une fois et sa ROI est retournée horizontalement. */
-function saveCal(){ try{ localStorage.setItem("pv6_cal",JSON.stringify(
+/* v6 vert/rouge : clé propre (pv7_cal). Les calibrations vert/bleu précédentes (pv6_cal, pv_cal) sont
+   volontairement ignorées : leurs teintes ne sont plus valables. */
+function saveCal(){ try{ localStorage.setItem("pv7_cal",JSON.stringify(
   {g:cal.green.h,y:cal.yellow.h,sMin:cal.sMin,tol:cal.tol,roi:cal.roi,mir:MIRROR?1:0})); }catch(e){} }
 function loadCal(){ try{
-  let c=JSON.parse(localStorage.getItem("pv6_cal")||"null"), legacy=false;
-  if(!c){ c=JSON.parse(localStorage.getItem("pv_cal")||"null"); legacy=!!c; }
+  const c=JSON.parse(localStorage.getItem("pv7_cal")||"null");
   if(c){ cal.green.h=c.g;cal.yellow.h=c.y;cal.sMin=c.sMin;cal.tol=c.tol;
-    if(c.roi){ cal.roi=c.roi; if(legacy&&MIRROR) cal.roi={x:1-(c.roi.x+c.roi.w),y:c.roi.y,w:c.roi.w,h:c.roi.h}; }
+    if(c.roi) cal.roi=c.roi;
+    { const cv=roiCoverage(); if(cv.l<0.5||cv.r<0.5) cal.roi={x:0.14,y:0.16,w:0.72,h:0.68}; }   // zone décentrée : un groupe serait quasi aveugle
     greenDone=yellowDone=true; return true; } }catch(e){} return false; }
+/* part de chaque moitié (Groupe 1 / Groupe 2) réellement couverte par la zone d'analyse */
+function roiCoverage(){
+  const l=Math.max(0,Math.min(0.5,cal.roi.x+cal.roi.w)-Math.max(0,cal.roi.x))/0.5;
+  const r=Math.max(0,Math.min(1,cal.roi.x+cal.roi.w)-Math.max(0.5,cal.roi.x))/0.5;
+  return {l,r};
+}
 function refreshCalState(){ const el=$("#calState");
-  if(greenDone&&yellowDone){ el.textContent="Salle calibrée ✔ (vert "+cal.green.h+"° · bleu "+cal.yellow.h+"°) — réglage mémorisé."; el.className="calState ok"; }
+  if(greenDone&&yellowDone){ el.textContent="Salle calibrée ✔ (vert "+cal.green.h+"° · rouge "+cal.yellow.h+"°) — réglage mémorisé."; el.className="calState ok"; }
   else { el.textContent="Salle non calibrée — lancez le réglage du matin une fois sur place."; el.className="calState todo"; } }
 
 /* ---- caméra (+ micro, optionnel) ---- */
@@ -899,12 +910,15 @@ function drawCal(){
   calOctx.fillStyle="#B6FF3C"; calOctx.fillRect(rx+rw-12,ry+rh-12,12,12);
   calOctx.fillStyle="rgba(0,0,0,.6)"; calOctx.fillRect(rx,ry-22,160,20);
   calOctx.fillStyle="#E7ECEF"; calOctx.font="12px monospace";
-  calOctx.fillText("vert "+lastG+"  bleu "+lastY,rx+6,ry-8);
+  calOctx.fillText("vert "+lastG+"  rouge "+lastY,rx+6,ry-8);
   /* trait central = séparation Groupe 1 (gauche) / Groupe 2 (droite) */
   calOctx.save(); calOctx.strokeStyle="#29F1FF"; calOctx.lineWidth=3; calOctx.setLineDash([10,6]);
   calOctx.beginPath(); calOctx.moveTo(W/2,0); calOctx.lineTo(W/2,H); calOctx.stroke(); calOctx.restore();
   calOctx.font="bold 14px monospace"; calOctx.fillStyle="#29F1FF";
   calOctx.fillText("GROUPE 1",8,H-10); calOctx.fillText("GROUPE 2",W-96,H-10);
+  const cv=roiCoverage();
+  if(cv.l<0.5||cv.r<0.5){ calOctx.fillStyle="#FF2E6A"; calOctx.font="bold 15px monospace";
+    calOctx.fillText("⚠ la zone ne couvre pas assez le "+(cv.l<cv.r?"GROUPE 1":"GROUPE 2")+" : élargissez-la",12,24); }
 }
 let drag=null;
 calOverlay.addEventListener("pointerdown",e=>{
@@ -1004,7 +1018,7 @@ const INFOS=[
   {t:"Photosynthèse",x:"L'algue capte la lumière et fabrique des <b>sucres</b> dont le ver se nourrit. Plus de vert exposé = plus d'énergie."},
   {t:"Pas d'intestin",x:"L'adulte n'a <b>pas de véritable intestin</b> : sa nourriture vient presque entièrement de la photosynthèse de ses algues."},
   {t:"Marée",x:"À <b>marée basse</b>, les vers remontent par milliers dans un film d'eau pour capter un maximum de lumière.",img:"assets/photo-plage.jpg"},
-  {t:"Fuite",x:"Le ver ignore les petites vibrations, mais au-delà d'un <b>seuil</b>, il plonge aussitôt dans le sable. Cachez vos algues vite — montrez le bleu !"},
+  {t:"Fuite",x:"Le ver ignore les petites vibrations, mais au-delà d'un <b>seuil</b>, il plonge aussitôt dans le sable. Cachez vos algues vite — montrez le rouge !"},
   {t:"Oxygène",x:"En photosynthétisant, les algues libèrent de l'<b>oxygène</b> : la colonie respire grâce à ses partenaires."},
   {t:"Modèle des coraux",x:"Cette photosymbiose sert de <b>modèle</b> pour comprendre celle des coraux, menacés par le <b>blanchissement</b>."},
   {t:"Vagues sociales",x:"Par milliers, les vers s'agrègent et forment des <b>tapis verts</b> sur le sable, un comportement collectif auto-organisé.",img:"assets/photo-tapis.jpg"},
@@ -1309,44 +1323,44 @@ function setPhase(k){phase=k;phaseT=0;dangerResolved=false;bird.active=false;con
   if(k==="sun"){pn.classList.remove("danger");$("#phBig").textContent="PHOTOSYNTHÈSE";$("#phSub").textContent="exposez vos algues au soleil";setFlash("SOLEIL","face verte !","var(--green)",1400);sfx("sun");}
   if(k==="maree"){pn.classList.remove("danger");$("#phBig").textContent="LA MARÉE";$("#phSub").textContent="suivez le rythme de la mer";
     mareeTarget="low";mareeNext=P().mareeInt;mareeGood=0;$("#callBanner").classList.add("show");setMareeBanner();setFlash("LA MARÉE","au rythme de la mer","var(--cyan)",1600);sfx("sun");
-    showChapter("LE RYTHME DE LA MARÉE","Le signal va changer plusieurs fois : suivez la bannière — <b>VERT</b> à marée basse (au soleil), <b>BLEU</b> à marée haute ou la nuit (à l'abri).",3000);}
-  if(k==="danger"){pn.classList.add("danger");tide=0.08;$("#phBig").textContent="DANGER";$("#phSub").textContent="cachez-vous — montrez le bleu !";
+    showChapter("LE RYTHME DE LA MARÉE","Le signal va changer plusieurs fois : suivez la bannière — <b>VERT</b> à marée basse (au soleil), <b>ROUGE</b> à marée haute ou la nuit (à l'abri).",3000);}
+  if(k==="danger"){pn.classList.add("danger");tide=0.08;$("#phBig").textContent="DANGER";$("#phSub").textContent="cachez-vous — montrez le rouge !";
     dangerKind=Math.random()<0.5?"bird":"wave"; bird={x:W+60,y:Hh*0.22,active:dangerKind==="bird"};
-    setFlash(dangerKind==="bird"?"PRÉDATEUR !":"VAGUE !","face bleue, vite !","var(--orange)",900);sfx("danger");}
+    setFlash(dangerKind==="bird"?"PRÉDATEUR !":"VAGUE !","face rouge, vite !","var(--orange)",900);sfx("danger");}
   if(k==="predator"){pn.classList.add("danger");tide=0.08;predSide=Math.random()<0.5?"L":"R";predResolved=false;
     bird={x:predSide==="L"?-60:W+60,y:Hh*0.2,active:true};
     $("#phBig").textContent="CHASSE CIBLÉE";$("#phSub").textContent=(predSide==="L"?"GROUPE 1":"GROUPE 2")+" se cache, l'autre produit";
     $("#callBanner").classList.add("show");$("#cbTxt").style.color="var(--orange)";
     $("#cbTxt").textContent=predSide==="L"?"◀ DANGER : GROUPE 1":"DANGER : GROUPE 2 ▶";
-    $("#cbSub").textContent="côté visé : BLEU · autre côté : VERT";
+    $("#cbSub").textContent="côté visé : ROUGE · autre côté : VERT";
     setFlash("UN OISEAU FONCE","un seul côté se cache !","var(--orange)",1400);sfx("danger");}
   if(k==="bleach"){pn.classList.remove("danger");stress=0;bleachGood=0;
     $("#phBig").textContent="TROP DE SOLEIL";$("#phSub").textContent="trouvez le bon équilibre de vert";
     $("#bleachWrap").style.display="block";$("#gband").style.display="block";
     $("#gband").style.bottom="45%";$("#gband").style.height="35%";
-    sweep("rgba(34,85,221,.7)");setFlash("ATTENTION CHALEUR","ni trop peu, ni trop de vert","var(--yellow)",2200);showInfo(10);
-    showChapter("TROUVER L'ÉQUILIBRE","Ici, pas de tout <b>VERT</b> ni de tout <b>BLEU</b> : trop de lumière stresse les algues. Gardez un mélange — ni trop peu, ni trop de vert.",4200);}
-  if(k==="phototaxie"){sweep("rgba(54,224,255,.8)");pn.classList.remove("danger");$("#phBig").textContent="PHOTOTAXIE";$("#phSub").textContent="suivez la lumière — un côté vert, un côté bleu";
+    sweep("rgba(232,72,58,.7)");setFlash("ATTENTION CHALEUR","ni trop peu, ni trop de vert","var(--yellow)",2200);showInfo(10);
+    showChapter("TROUVER L'ÉQUILIBRE","Ici, pas de tout <b>VERT</b> ni de tout <b>ROUGE</b> : trop de lumière stresse les algues. Gardez un mélange — ni trop peu, ni trop de vert.",4200);}
+  if(k==="phototaxie"){sweep("rgba(54,224,255,.8)");pn.classList.remove("danger");$("#phBig").textContent="PHOTOTAXIE";$("#phSub").textContent="suivez la lumière — un côté vert, un côté rouge";
     pheading=Math.random()<0.5?"left":"right";zEvalT=0;zScoreSum=0;zEvals=0;zFlip=0;
     $("#zoneBanner").classList.add("show");$("#zoneMeters").classList.add("show");setZoneBanner();
     setFlash("SÉPAREZ-VOUS","la lumière se déplace !","var(--green)",2000);sfx("sun");
-    showChapter("PHOTOTAXIE","La lumière n'éclaire qu'un côté à la fois. Ce côté montre le <b>VERT</b>, l'autre le <b>BLEU</b> — et ça va changer de côté en cours de route !",4200);}
+    showChapter("PHOTOTAXIE","La lumière n'éclaire qu'un côté à la fois. Ce côté montre le <b>VERT</b>, l'autre le <b>ROUGE</b> — et ça va changer de côté en cours de route !",4200);}
   if(k==="greenwave"){sweep("rgba(61,255,140,.85)");pn.classList.remove("danger");$("#phBig").textContent="LA VAGUE VERTE";$("#phSub").textContent="faites voyager le vert d'un bout à l'autre";
     waveSeg=0;waveSide="L";waveNext=3.2;waveScore=0;$("#zoneMeters").classList.add("show");
     $("#zmLlbl").textContent="Groupe 1";$("#zmRlbl").textContent="Groupe 2";
     setFlash("LA VAGUE VERTE","comme une ola de stade !","var(--green)",2000);sfx("sun");}
-  if(k==="night"){pn.classList.remove("danger");nightGood=0;$("#phBig").textContent="LA NUIT";$("#phSub").textContent="pas de soleil — reposez-vous, tout en bleu";
-    setFlash("LA NUIT TOMBE","tout le monde au bleu","var(--cyan)",2000);}
+  if(k==="night"){pn.classList.remove("danger");nightGood=0;$("#phBig").textContent="LA NUIT";$("#phSub").textContent="pas de soleil — reposez-vous, tout en rouge";
+    setFlash("LA NUIT TOMBE","tout le monde au rouge","var(--cyan)",2000);}
   if(k==="final"){pn.classList.remove("danger");$("#phBig").textContent="GRANDE MARÉE";$("#phSub").textContent="effort maximal — tout au vert";setFlash("GRANDE MARÉE","tout le monde au vert !","var(--green)",2200);sfx("sun");showInfo(15);}
-  if(k==="photo"){sweep("rgba(61,255,140,.85)");pn.classList.remove("danger");$("#phBig").textContent="USINE À SUCRES";$("#phSub").textContent="votez vert (vrai) ou bleu (faux)";
+  if(k==="photo"){sweep("rgba(61,255,140,.85)");pn.classList.remove("danger");$("#phBig").textContent="USINE À SUCRES";$("#phSub").textContent="votez vert (vrai) ou rouge (faux)";
     photo=selectPhotoQs();pIdx=0;pScore=0;pStep=0;pLocked=false;
     document.querySelectorAll(".pstage").forEach(s=>s.classList.remove("on"));
     $("#pEff").textContent="";$("#pTimer").style.visibility="visible";$("#photoOverlay").classList.add("show");loadPhotoQ();
-    showChapter("LE QUIZ","Une affirmation apparaît. Montrez <b>VERT</b> si vous êtes d'accord (vrai), <b>BLEU</b> si vous n'êtes pas d'accord (faux). Prenez le temps de lire avant de répondre.",4500);
+    showChapter("LE QUIZ","Une affirmation apparaît. Montrez <b>VERT</b> si vous êtes d'accord (vrai), <b>ROUGE</b> si vous n'êtes pas d'accord (faux). Prenez le temps de lire avant de répondre.",4500);
     setFlash("QUIZ","convertissons la lumière !","var(--green)",1800);sfx("acquired");}
   if(k==="carnivore"){pn.classList.remove("danger");carnResolved=false;carnGood=0;
     bird={x:W+60,y:Hh*0.3,active:true};
-    $("#phBig").textContent="LA PLANTE CARNIVORE";$("#phSub").textContent="vert pour attirer l'insecte, bleu pour refermer le piège au bon moment";
+    $("#phBig").textContent="LA PLANTE CARNIVORE";$("#phSub").textContent="vert pour attirer l'insecte, rouge pour refermer le piège au bon moment";
     showChapter("AUTRES STRATÉGIES","Le ver de Roscoff n'est pas seul à se débrouiller sans vraiment « manger ». La plante carnivore, elle, capte déjà la lumière comme n'importe quelle plante — mais chasse pour l'<b>azote</b> qui manque dans son sol.",4200);
     setFlash("PLANTE CARNIVORE","attirez… puis refermez !","var(--green)",2000);sfx("sun");showInfo(11);}
   if(k==="earthworm"){pn.classList.remove("danger");wormGood=0;prevFrame=null;
@@ -1354,27 +1368,27 @@ function setPhase(k){phase=k;phaseT=0;dangerResolved=false;bird.active=false;con
     showChapter("RUPTURE TOTALE","Cette fois, pas de lumière, pas d'algue, pas de photosynthèse : le ver de terre vit uniquement de matière organique en décomposition. Ici, montrer le vert ne sert à rien.",4200);
     setFlash("VER DE TERRE","attendez le signal, puis freeze !","var(--cyan)",2200);showInfo(12);}
   if(k==="cheer"){pn.classList.remove("danger");flickerCount=0;flickerState=null;
-    $("#phBig").textContent="L'OVATION";$("#phSub").textContent="alternez vert et bleu le plus vite possible !";
-    setFlash("TOUS ENSEMBLE","vert-bleu-vert-bleu, vite !","var(--magenta)",1800);sfx("acquired");
-    showChapter("L'OVATION","Alternez <b>VERT</b> et <b>BLEU</b> le plus vite possible, tous ensemble — c'est notre façon d'applaudir sans faire de bruit !",3000);}
+    $("#phBig").textContent="L'OVATION";$("#phSub").textContent="alternez vert et rouge le plus vite possible !";
+    setFlash("TOUS ENSEMBLE","vert-rouge-vert-rouge, vite !","var(--magenta)",1800);sfx("acquired");
+    showChapter("L'OVATION","Alternez <b>VERT</b> et <b>ROUGE</b> le plus vite possible, tous ensemble — c'est notre façon d'applaudir sans faire de bruit !",3000);}
 }
 
 function setMareeBanner(){
   if(mareeTarget==="night"){
     $("#cbTxt").style.color="var(--cyan)";$("#cbTxt").textContent="LA NUIT TOMBE";
-    $("#cbSub").textContent="pas de lumière — montrez le BLEU";return;
+    $("#cbSub").textContent="pas de lumière — montrez le ROUGE";return;
   }
   const low=mareeTarget==="low";
   $("#cbTxt").style.color=low?"var(--green)":"var(--yellow)";
   $("#cbTxt").textContent=low?"MARÉE BASSE · AU SOLEIL":"MARÉE HAUTE · À L'ABRI";
-  $("#cbSub").textContent=low?"montrez le VERT":"montrez le BLEU";}
+  $("#cbSub").textContent=low?"montrez le VERT":"montrez le ROUGE";}
 function setZoneBanner(){const left=pheading==="left";
   $("#zbTxt").innerHTML=left?"◀ LUMIÈRE : GROUPE 1":"LUMIÈRE : GROUPE 2 ▶";
-  $("#zmLlbl").textContent=left?"Groupe 1 · au VERT":"Groupe 1 · au BLEU";
-  $("#zmRlbl").textContent=left?"Groupe 2 · au BLEU":"Groupe 2 · au VERT";}
+  $("#zmLlbl").textContent=left?"Groupe 1 · au VERT":"Groupe 1 · au ROUGE";
+  $("#zmRlbl").textContent=left?"Groupe 2 · au ROUGE":"Groupe 2 · au VERT";}
 function loadPhotoQ(){const o=photo[pIdx];if(!o){return;}
   pT=0;pLocked=false;$("#pQ").textContent=o.q;
-  $("#pHint").innerHTML='<span class="vg">VERT = vrai</span> &nbsp;·&nbsp; <span class="vy">BLEU = faux</span>';
+  $("#pHint").innerHTML='<span class="vg">VERT = vrai</span> &nbsp;·&nbsp; <span class="vy">ROUGE = faux</span>';
   $("#pVote").textContent="";}
 function nextPhase(){roundIdx++;if(roundIdx>=plan.length){endGame(energy>=P().winAt);return;}setPhase(plan[roundIdx].k);}
 
@@ -1478,15 +1492,15 @@ function loopBody(ts){
       if(phaseT>waveNext){waveSeg++;waveSide=waveSide==="L"?"R":"L";waveNext+=3.2;sfx("sun");
         $("#zbTxt").textContent="";}
       const green=waveSide==="L"?sig.gL:sig.gR, other=waveSide==="L"?sig.yR:sig.yL;
-      $("#zmLlbl").textContent=waveSide==="L"?"Groupe 1 · au VERT":"Groupe 1 · au bleu";
-      $("#zmRlbl").textContent=waveSide==="R"?"Groupe 2 · au VERT":"Groupe 2 · au bleu";
+      $("#zmLlbl").textContent=waveSide==="L"?"Groupe 1 · au VERT":"Groupe 1 · au rouge";
+      $("#zmRlbl").textContent=waveSide==="R"?"Groupe 2 · au VERT":"Groupe 2 · au rouge";
       $("#zmL").style.width=(sig.gL*100)+"%";$("#zmR").style.width=(sig.gR*100)+"%";
       if(green>0.5&&other>0.35){waveScore+=dt;if(acquired)energy=Math.min(100,energy+6*dt);}
       if(phaseT>cur.dur){const bonus=Math.round(Math.min(1,waveScore/(cur.dur*0.5))*8);energy=Math.min(100,energy+bonus);
         setFlash(bonus>4?"BELLE VAGUE !":"PRESQUE","le vert a voyagé (+"+bonus+")","var(--green)",1700);showInfo(7);nextPhase();}
     }else if(phase==="night"){
       if(G<0.3)nightGood+=dt;
-      if(phaseT>cur.dur){ if(nightGood>cur.dur*0.6){ if(PROFILE==="6e"&&health<maxHealth){health++;drawHearts();setFlash("REPOS RÉPARATEUR","la colonie récupère","var(--green)",1600);} else setFlash("BONNE NUIT","colonie reposée","var(--cyan)",1400);} else setFlash("NUIT AGITÉE","il fallait montrer le bleu","var(--orange)",1400); nextPhase(); }
+      if(phaseT>cur.dur){ if(nightGood>cur.dur*0.6){ if(PROFILE==="6e"&&health<maxHealth){health++;drawHearts();setFlash("REPOS RÉPARATEUR","la colonie récupère","var(--green)",1600);} else setFlash("BONNE NUIT","colonie reposée","var(--cyan)",1400);} else setFlash("NUIT AGITÉE","il fallait montrer le rouge","var(--orange)",1400); nextPhase(); }
     }else if(phase==="photo"){
       if(!photo){nextPhase();}
       else if(pLocked===false){
@@ -1497,7 +1511,7 @@ function loopBody(ts){
         if(pT>=p.quizT){pLocked=true;pT=0;const ans=G>0.5,ok=(ans===o.a);
           if(ok){pScore++;const st=document.querySelector('.pstage[data-s="'+Math.min(3,pStep)+'"]');if(st)st.classList.add("on");pStep++;sfx("dodge");
             $("#pVote").innerHTML='<span style="color:var(--green)">\u2714 r\u00e9ponse '+(ans?"VRAI":"FAUX")+' \u2014 bien vu</span>';}
-          else{sfx("hit");$("#pVote").innerHTML='<span style="color:var(--orange)">\u2718 rat\u00e9 \u2014 c\u2019\u00e9tait '+(o.a?"VRAI (vert)":"FAUX (bleu)")+'</span>';}}
+          else{sfx("hit");$("#pVote").innerHTML='<span style="color:var(--orange)">\u2718 rat\u00e9 \u2014 c\u2019\u00e9tait '+(o.a?"VRAI (vert)":"FAUX (rouge)")+'</span>';}}
       }else if(pLocked===true){
         pT+=dt;if(pT>1.7){pIdx++;if(pIdx<photo.length){loadPhotoQ();}
           else{pLocked=2;pT=0;const eff=pScore/photo.length,bonus=Math.round(eff*22);energy=Math.min(100,energy+bonus);
@@ -1513,7 +1527,7 @@ function loopBody(ts){
         carnResolved=true;
         const attractBonus=Math.round(Math.min(1,carnGood/(trigT*0.55))*6);
         if(G<0.42){energy=Math.min(100,energy+14+attractBonus);sfx("dodge");setFlash("PIÈGE REFERMÉ !","la plante capte son azote (+"+(14+attractBonus)+")","var(--green)",1600);}
-        else{energy=Math.min(100,energy+4+attractBonus);sfx("tick");setFlash("RATÉ DE PEU","il fallait montrer le bleu au bon moment","var(--orange-soft)",1600);}
+        else{energy=Math.min(100,energy+4+attractBonus);sfx("tick");setFlash("RATÉ DE PEU","il fallait montrer le rouge au bon moment","var(--orange-soft)",1600);}
         bird.active=false;
       }
       if(phaseT>cur.dur)nextPhase();
@@ -1529,7 +1543,7 @@ function loopBody(ts){
         nextPhase();
       }
     }else if(phase==="cheer"){
-      const flickSt = G>0.6?"green":(G<0.4?"blue":null);
+      const flickSt = G>0.6?"green":(G<0.4?"red":null);
       if(flickSt && flickSt!==flickerState){ if(flickerState!==null) flickerCount++; flickerState=flickSt; }
       if(phaseT>cur.dur){const bonus=Math.round(Math.min(1,flickerCount/12)*16);energy=Math.min(100,energy+bonus);
         setFlash(flickerCount>=8?"ÇA S'AGITE !":"ENCORE UN EFFORT","la colonie s'agite (+"+bonus+")","var(--magenta)",1800);sfx("win");nextPhase();}
@@ -1562,8 +1576,10 @@ function buildAwaken(){
   awakenIdx=0;holdT=0;warmTarget=null;warmT=0;warmCount=0;warmReacts=[];warmArmed=false;
   enterAwakenStep();
 }
+const ZONE_T=5, WARM_PROMPT_T=5, WARM_MAX_T=30;
+let zoneFrac=0, warmTotal=0;
 function enterAwakenStep(){
-  const s=awakenSteps[awakenIdx];holdT=0;stepElapsed=0;
+  const s=awakenSteps[awakenIdx];holdT=0;stepElapsed=0;zoneFrac=0;
   $("#awakenReact").textContent="";
   $("#amL").classList.remove("ok");$("#amR").classList.remove("ok");
   $("#awakenProg").textContent="étape "+(awakenIdx+1)+" / "+awakenSteps.length;
@@ -1572,28 +1588,28 @@ function enterAwakenStep(){
   updateCamSplit(showMeters);
   if(s.t==="intro"){
     $("#awTitle").textContent="LE RÉVEIL";
-    $("#awInstr").innerHTML="La colonie s'éveille. Avant le jour, chaque groupe apprend ses deux gestes. <b>Vert</b>, j'ouvre mes algues au soleil. <b>Bleu</b>, je plonge dans le sable.";
+    $("#awInstr").innerHTML="La colonie s'éveille. Avant le jour, chaque groupe apprend ses deux gestes. <b>Vert</b>, j'ouvre mes algues au soleil. <b>Rouge</b>, je plonge dans le sable.";
     $("#awMeaning").textContent="";
     setFlash("ÉVEIL","la colonie se réveille","var(--green)",1600);
   }
   if(s.t==="zone"){
     const c1=s.side==="L", who=c1?"Groupe 1":"Groupe 2";
-    const col=s.color==="green"?"le VERT":"le BLEU";
+    const col=s.color==="green"?"le VERT":"le ROUGE";
     $("#awTitle").textContent=(c1?"COLONIE 1":"COLONIE 2");
     $("#awInstr").innerHTML="<b>"+who+"</b>, montrez "+(s.color==="green"?'<b style="color:var(--green)">'+col+"</b>":'<b style="color:var(--yellow)">'+col+"</b>")+" et gardez levé.";
     $("#awMeaning").innerHTML=s.color==="green"
       ? "le vert, ce sont mes algues au soleil : la vie et l'énergie"
-      : "le bleu, c'est plonger dans le sable : se cacher, se protéger";
+      : "le rouge, c'est plonger dans le sable : se cacher, se protéger";
     // objectif visuel : seuil sur la barre concernée
-    const goalL=$("#amLgoal"),goalR=$("#amRgoal");goalL.style.left="55%";goalR.style.left="55%";
+    const goalL=$("#amLgoal"),goalR=$("#amRgoal");goalL.style.left="50%";goalR.style.left="50%";
     $("#amLlbl").innerHTML="Groupe 1 <span class=\"voyant\" id=\"voyAwL\">NC</span>";
     $("#amRlbl").innerHTML="Groupe 2 <span class=\"voyant\" id=\"voyAwR\">NC</span>";
   }
   if(s.t==="warm"){
     $("#awTitle").textContent="LE VER DE ROSCOFF DIT…";
-    $("#awInstr").innerHTML="Échauffement ! Quand j'annonce <b style='color:var(--green)'>SOLEIL</b>, tout le monde au vert. Quand j'annonce <b style='color:var(--orange)'>DANGER</b>, tout le monde au bleu. De plus en plus vite.";
+    $("#awInstr").innerHTML="Échauffement ! Quand j'annonce <b style='color:var(--green)'>SOLEIL</b>, tout le monde au vert. Quand j'annonce <b style='color:var(--orange)'>DANGER</b>, tout le monde au rouge. De plus en plus vite.";
     $("#awMeaning").textContent="";
-    warmCount=0;warmTarget=null;warmT=0.8;warmArmed=false;warmReacts=[];
+    warmCount=0;warmTarget=null;warmT=0.8;warmArmed=false;warmReacts=[];warmTotal=0;
   }
 }
 function awakenTick(t,dt){
@@ -1603,25 +1619,34 @@ function awakenTick(t,dt){
     holdT+=dt; if(holdT>2.6){awakenIdx++;enterAwakenStep();}
   }else if(s.t==="zone"){
     const c1=s.side==="L";
-    const frac = s.color==="green" ? (c1?sig.gL:sig.gR) : (c1?sig.yL:sig.yR);
+    const rawFrac = s.color==="green" ? (c1?sig.gL:sig.gR) : (c1?sig.yL:sig.yR);
+    const sideLive = c1?sig.liveL:sig.liveR;
+    zoneFrac = lerp(zoneFrac, sideLive?rawFrac:0, 0.35);       // lissage : un pixel parasite ne fait pas sauter la barre
+    const frac = zoneFrac;
     const fillEl=c1?$("#amLfill"):$("#amRfill");
     const otherFill=c1?$("#amRfill"):$("#amLfill");
     fillEl.style.background=s.color==="green"?"var(--green)":"var(--yellow)";
     fillEl.style.width=Math.round(frac*100)+"%"; otherFill.style.width="0%";
     const amEl=c1?$("#amL"):$("#amR");
-    if(frac>0.55){holdT+=dt; if(holdT>0.9){amEl.classList.add("ok");sfx("dodge");
+    stepElapsed+=dt;
+    $("#awakenProg").textContent="étape "+(awakenIdx+1)+" / "+awakenSteps.length+" · "+Math.max(0,Math.ceil(ZONE_T-stepElapsed))+" s";
+    if(frac>0.5){holdT+=dt; if(holdT>0.7){amEl.classList.add("ok");sfx("dodge");
         setFlash("✔","c'est ça !","var(--green)",700);
-        setTimeout(()=>{},0); awakenIdx++;enterAwakenStep();return;}}
-    else{holdT=Math.max(0,holdT-dt*0.5);stepElapsed+=dt;
-      if(stepElapsed>2.5) $("#awakenReact").textContent="Peu de "+(s.color==="green"?"vert":"bleu")+" détecté ici — plus de lumière, cartes plus hautes, ou recalibrer ce coin.";
+        awakenIdx++;enterAwakenStep();return;}}
+    else{holdT=Math.max(0,holdT-dt*0.5);
+      if(stepElapsed>2.5) $("#awakenReact").textContent = sideLive
+        ? "Peu de "+(s.color==="green"?"vert":"rouge")+" détecté ici — plus de lumière, cartes plus hautes, ou recalibrer."
+        : "Aucune couleur captée de ce côté — cartes plus hautes / plus de lumière, ou vérifier la zone de la caméra.";
     }
+    /* quoi qu'il arrive, on passe à la suite après ZONE_T secondes : l'échauffement ne bloque jamais */
+    if(stepElapsed>=ZONE_T){ awakenIdx++; enterAwakenStep(); return; }
   }else if(s.t==="warm"){
     $("#awakenMeters").style.display="none";
-    warmT-=dt;
+    warmT-=dt; warmTotal+=dt;
     if(warmTarget===null && warmT<=0){
       warmTarget=Math.random()<0.5?"green":"yellow";warmArmed=true;
       if(warmTarget==="green"){setFlash("SOLEIL","au vert !","var(--green)",1400);sfx("sun");}
-      else{setFlash("DANGER","au bleu !","var(--orange)",1400);sfx("danger");}
+      else{setFlash("DANGER","au rouge !","var(--orange)",1400);sfx("danger");}
       warmT=0; warmStart=t;
     }
     if(warmArmed){
@@ -1630,7 +1655,10 @@ function awakenTick(t,dt){
         if(PROFILE==="terminale")$("#awakenReact").textContent="réaction "+rt+" s";
         warmT=0.7+Math.random()*0.7;}
     }
+    /* garde-fou : une consigne sans réaction au bout de WARM_PROMPT_T s est passée ; au bout de WARM_MAX_T s on lance la partie */
+    if(warmArmed && (t-warmStart)>WARM_PROMPT_T){warmArmed=false;warmTarget=null;warmCount++;warmT=0.5;}
     const need=PROFILE==="6e"?3:4;
+    if(warmTotal>WARM_MAX_T && warmCount<need) warmCount=need;
     $("#awakenProg").textContent="échauffement "+Math.min(warmCount,need)+" / "+need;
     if(warmCount>=need){
       if(PROFILE==="terminale"&&warmReacts.length){const avg=(warmReacts.reduce((a,b)=>a+b,0)/warmReacts.length).toFixed(2);

@@ -8,7 +8,7 @@ Créé par **Corentin Spriet, PhD, HDR**, dans le cadre du festival du CNRS Haut
 Les élèves forment une colonie de *Symsagittifera roscoffensis*, un petit ver marin qui vit en association
 avec une micro-algue verte, *Tetraselmis convolutae*. Pour survivre, la colonie doit exposer ses algues
 au soleil, se cacher quand un danger arrive et suivre le rythme des marées. Les élèves jouent avec deux
-cartes de couleur, **verte** et **bleue**, que la webcam lit en direct.
+cartes de couleur, **verte** et **rouge**, que la webcam lit en direct.
 
 - une quinzaine d'élèves, environ 5 minutes par partie ;
 - deux niveaux : **Explorateurs (6e)** et **Stratèges (terminale)** ;
@@ -25,12 +25,13 @@ cartes de couleur, **verte** et **bleue**, que la webcam lit en direct.
 ## Matériel
 
 - un ordinateur avec **webcam** (et idéalement un grand écran ou un vidéoprojecteur) ;
-- **deux cartes A4** unies, une verte et une bleue : le PDF `bck/cartes-couleur-test.pdf` (vert `#00B247`,
-  bleu `#2255DD`) est à imprimer en couleur ;
+- **deux cartes A4** unies, une verte et une rouge : le PDF `bck/cartes-vert-rouge.pdf` (vert `#5BBB6F`,
+  rouge `#E8483A`) est à imprimer en couleur ;
 - Windows pour le lanceur fourni (sur un autre système, voir « Lancer » ci-dessous).
 
-Le vert et le bleu ont été choisis volontairement : le jaune puis le rouge étaient confondus avec la peau par
-la caméra, alors que le bleu est loin des teintes de peau comme du vert.
+Le vert et le rouge ont été retenus après des essais sur site : le bleu et le vert deviennent indiscernables
+sous un éclairage faible. Le rouge est proche des teintes de peau : le jeu lui applique donc des seuils de
+saturation et de tolérance plus stricts que pour le vert (cartes bien saturées, mates, de préférence).
 
 ## Lancer le jeu
 
@@ -50,10 +51,10 @@ remplacement.
 ## Avant la partie : calibration
 
 Sur l'écran d'accueil, **« Réglage salle (matin) »** : cadrez la zone, montrez la carte verte puis la carte
-bleue pendant ~1,5 s pour que le jeu apprenne les teintes sous l'éclairage réel. Calibrez à la distance et
+rouge pendant ~1,5 s pour que le jeu apprenne les teintes sous l'éclairage réel. Calibrez à la distance et
 dans la lumière de la vraie partie. Le réglage est mémorisé par le navigateur (à refaire sur chaque ordinateur).
 
-La touche **D** affiche un masque de contrôle des pixels reconnus comme verts ou bleus. Le trait au centre de
+La touche **D** affiche un masque de contrôle des pixels reconnus comme verts ou rouges. Le trait au centre de
 l'image sépare le **Groupe 1** (gauche) du **Groupe 2** (droite) ; l'image est affichée en miroir.
 
 ## Déroulé d'une partie
@@ -63,10 +64,10 @@ Réveil de la colonie (échauffement), puis :
 1. **Acquisition** : une algue arrive d'un côté, le groupe concerné montre le vert pour l'attirer ;
 2. deux tours de **soleil → marée → danger** (ou chasse ciblée d'un prédateur) ;
 3. **Blanchiment** : trouver l'équilibre, ni trop ni trop peu de vert ;
-4. **Phototaxie** : un groupe au vert (côté éclairé), l'autre au bleu, puis ça s'inverse ;
+4. **Phototaxie** : un groupe au vert (côté éclairé), l'autre au rouge, puis ça s'inverse ;
 5. **Plante carnivore** et **ver de terre** : deux autres façons de se nourrir ;
-6. **Quiz** « usine à sucres » : vert = vrai, bleu = faux ;
-7. **Ovation** : on alterne vert et bleu le plus vite possible, sans bruit ;
+6. **Quiz** « usine à sucres » : vert = vrai, rouge = faux ;
+7. **Ovation** : on alterne vert et rouge le plus vite possible, sans bruit ;
 8. **Grande marée** finale. La partie va toujours jusqu'au bout : les erreurs font baisser le score final.
 
 ## Contenu du dépôt
@@ -83,7 +84,7 @@ Réveil de la colonie (échauffement), puis :
 ## Notes techniques
 
 - HTML / CSS / JavaScript dans un seul fichier, sans dépendance JavaScript externe ;
-- détection par la **teinte (HSV)** de chaque pixel dans une zone choisie, avec calibration vert/bleu ;
+- détection par la **teinte (HSV)** de chaque pixel dans une zone choisie, avec calibration vert/rouge ;
 - bruitages synthétisés (WebAudio), pas de micro ni de fichier audio ;
 - les images sont des illustrations générées puis détourées, et des photos de laboratoire.
 
