@@ -521,8 +521,8 @@
           <button class="btn yellow" id="capYellow">Capturer rouge</button>
         </div>
         <div class="calRead" id="calReadTxt">Le masque montre en direct les pixels classés vert / rouge. Ajustez si le fond est capté à tort :</div>
-        <div class="sliderRow"><label>Saturation min</label><input type="range" id="satMin" min="10" max="80" value="20"><span class="mono" id="satTxt" style="font-size:11px">0.20</span></div>
-        <div class="sliderRow"><label>Tolérance °</label><input type="range" id="tol" min="10" max="45" value="35"><span class="mono" id="tolTxt" style="font-size:11px">35</span></div>
+        <div class="sliderRow"><label>Saturation min</label><input type="range" id="satMin" min="8" max="80" value="15"><span class="mono" id="satTxt" style="font-size:11px">0.15</span></div>
+        <div class="sliderRow"><label>Tolérance °</label><input type="range" id="tol" min="10" max="50" value="40"><span class="mono" id="tolTxt" style="font-size:11px">40</span></div>
         <div class="row" style="justify-content:flex-start;margin-top:16px">
           <button class="btn" id="calSave" disabled>Enregistrer & retour</button>
           <button class="btn ghost" id="calBack">Retour</button>
@@ -663,7 +663,7 @@ const maskCtx=maskCv.getContext("2d");
 let zL={g:0,y:0}, zR={g:0,y:0};
 let prevFrame=null, prevSimV=0;
 
-const cal={ green:{h:134}, yellow:{h:7}, sMin:0.20, vMin:0.10, vMax:0.99, tol:35,
+const cal={ green:{h:134}, yellow:{h:7}, sMin:0.15, vMin:0.08, vMax:1.01, tol:40,
             roi:{x:0.14,y:0.16,w:0.72,h:0.68} };
 
 function rgb2hsv(r,g,b){
@@ -676,8 +676,8 @@ function rgb2hsv(r,g,b){
 function hueDist(a,b){const x=Math.abs(a-b);return Math.min(x,360-x);}
 /* le ROUGE (id interne "yellow") est proche des teintes de peau : seuils plus stricts que le vert,
    dérivés des deux curseurs de réglage (saturation min, tolérance) */
-function sMinRed(){ return Math.min(0.70,Math.max(0.45,cal.sMin*2.4)); }
-function tolRed(){ return Math.max(12,Math.round(cal.tol*0.45)); }
+function sMinRed(){ return Math.max(0.20,cal.sMin*1.4); }
+function tolRed(){ return Math.max(20,Math.round(cal.tol*0.8)); }
 
 /* source vidéo active : calVideo pendant l'écran de calibration (state==="cal"),
    sinon toujours video — calVideo reste "readyState>=2" indéfiniment même une fois
@@ -718,7 +718,7 @@ function analyze(buildMask){
       if(hsv.s>=cal.sMin && hsv.v>=cal.vMin && hsv.v<=cal.vMax){
         const dg=hueDist(hsv.h,cal.green.h), dy=hueDist(hsv.h,cal.yellow.h);
         if(dg<=cal.tol && dg<=dy){ g++; cls=1; if(i<mid)gL++;else gR++; }
-        else if(dy<=tolRed() && hsv.s>=sMinRed() && hsv.v>=0.16){ y++; cls=2; if(i<mid)yL++;else yR++; }
+        else if(dy<=tolRed() && hsv.s>=sMinRed()){ y++; cls=2; if(i<mid)yL++;else yR++; }
       }
       if(mask){
         if(cls===1){mask.data[idx]=20;mask.data[idx+1]=255;mask.data[idx+2]=120;mask.data[idx+3]=240;}

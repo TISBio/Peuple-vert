@@ -19,9 +19,9 @@ Répondre en français, de façon concise.
 - Touche `D` : masque de debug (pixels classés vert/rouge) sur la boîte caméra.
 
 ## Détection des couleurs (HSV)
-- Cartes : **VERT** `#5BBB6F` (~134°) et **ROUGE** `#E8483A` (~7°). Historique : jaune → rouge → bleu (v6) → de nouveau rouge : sur site, bleu et vert étaient indiscernables en faible lumière. Le rouge est proche de la peau (10–30°) : il a ses propres seuils (`sMinRed()` ≥0.45, `tolRed()` ≈16°, v≥0.16) ; le calibrage rouge ne compte que les pixels saturés (poids s²).
+- Cartes : **VERT** `#5BBB6F` (~134°) et **ROUGE** `#E8483A` (~7°). Historique : jaune → rouge → bleu (v6) → de nouveau rouge : sur site, bleu et vert étaient indiscernables en faible lumière. Le rouge est proche de la peau (10–30°) : seuils volontairement LARGES (`sMinRed()` ≈0.21, `tolRed()` ≈32°) : spots/projecteurs en salle, on préfère détecter trop que pas assez ; la peau en faux positif est acceptée (consigne : se cacher avec les cartes). Calibrage rouge pondéré s².
 - Les identifiants internes disent encore « yellow » (`cal.yellow`, `--yellow`, `#capYellow`…) : c'est le **ROUGE**. Le texte affiché dit « rouge ».
-- `analyze()` : `sMin 0.20`, `tol 35°`, `vMin 0.10` (vert). Séparation Groupe 1 / Groupe 2 au centre de l'image (`CW/2`).
+- `analyze()` : `sMin 0.15`, `tol 40°`, `vMin 0.08`, pas de plafond de luminosité (vMax 1.01). Séparation Groupe 1 / Groupe 2 au centre de l'image (`CW/2`).
 - `MIRROR=true` retourne l'affichage ET le tampon d'analyse (toujours les deux ensemble). Calibration enregistrée dans `localStorage` clé `pv7_cal` (les anciennes clés vert/bleu sont ignorées ; une ROI qui couvre mal un groupe est remise par défaut).
 - `camSrc()` choisit la source vidéo selon `state` (`calVideo` seulement pendant la calibration).
 - `loop()` est un wrapper `try/catch` autour de `loopBody()` : une erreur ne doit jamais figer le jeu. Le garder.
